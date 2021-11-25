@@ -10,7 +10,8 @@ const Home: NextPage<Props> = ({ apes }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 bg-green-50 p-16">
         {apes.map((a) => {
           const heroImageUrl =
-            sanityClient.urlForImageSource(a.image).auto('format').height(255).url() ?? undefined;
+            sanityClient.urlForImageSource(a.image).auto('format').height(255).width(255).url() ??
+            undefined;
           return (
             <div key={heroImageUrl}>
               <img src={heroImageUrl} />
