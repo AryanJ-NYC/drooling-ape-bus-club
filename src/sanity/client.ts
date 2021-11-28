@@ -17,7 +17,7 @@ export class SanityClient extends Sanity {
   }
 
   async getApes() {
-    const apesQuery = /* groq */ `*[_type == 'ape'] { image }`;
+    const apesQuery = /* groq */ `*[_type == 'ape']`;
     const blogPosts = await this.fetch(apesQuery);
     return blogPosts;
   }

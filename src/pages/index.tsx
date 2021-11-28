@@ -12,7 +12,14 @@ const Home: NextPage<Props> = ({ apes }) => {
           const heroImageUrl =
             sanityClient.urlForImageSource(a.image).auto('format').height(255).width(255).url() ??
             undefined;
-          return (
+          const xchainUrl = a.xchainUrl;
+          return xchainUrl ? (
+            <div key={heroImageUrl} className="flex flex-shrink">
+              <a href={xchainUrl} target="_blank" rel="noopener noreferrer">
+                <img src={heroImageUrl} />
+              </a>
+            </div>
+          ) : (
             <div key={heroImageUrl}>
               <img src={heroImageUrl} />
             </div>
@@ -28,6 +35,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async () => {
   const apes = await sanity.getApes();
   return { props: { apes } };
 };
-type Props = { apes: { image: string }[] };
+type Props = { apes: { image: string; xchainUrl?: string }[] };
 
 export default Home;
