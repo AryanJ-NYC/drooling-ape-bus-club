@@ -11,6 +11,7 @@ const ape = {
     },
     { title: 'Name', name: 'name', type: 'string' },
     { title: 'xchain URL', name: 'xchainUrl', type: 'url' },
+    { name: 'order', title: 'Order', type: 'number', hidden: true },
   ],
 };
 
