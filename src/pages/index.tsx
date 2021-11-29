@@ -19,6 +19,22 @@ const Home: NextPage<Props> = ({ apes }) => {
               <MaybeAnchor className="flex flex-shrink" href={xchainUrl}>
                 <img src={heroImageUrl} />
               </MaybeAnchor>
+              {a.artists?.length ? (
+                <p className="text-xs">
+                  by{' '}
+                  {a.artists.map((artist) => (
+                    <a
+                      className="text-blue-400 hover:text-blue-600"
+                      href={artist.webpage}
+                      key={artist.name}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {artist.name}
+                    </a>
+                  ))}
+                </p>
+              ) : null}
             </div>
           );
         })}
@@ -44,6 +60,13 @@ export const getServerSideProps: GetServerSideProps<Props> = async () => {
   const apes = await sanity.getApes();
   return { props: { apes } };
 };
-type Props = { apes: { image: string; name: string; xchainUrl?: string }[] };
+type Props = {
+  apes: {
+    artists: { name: string; webpage: string }[];
+    image: string;
+    name: string;
+    xchainUrl?: string;
+  }[];
+};
 
 export default Home;

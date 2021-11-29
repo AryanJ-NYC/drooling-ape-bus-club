@@ -11,6 +11,12 @@ const ape = {
     },
     { title: 'Name', name: 'name', type: 'string' },
     { title: 'xchain URL', name: 'xchainUrl', type: 'url' },
+    {
+      title: 'Artists',
+      name: 'artists',
+      type: 'array',
+      of: [{ type: 'reference', to: { type: 'artist' } }],
+    },
     { name: 'order', title: 'Order', type: 'number', hidden: true },
   ],
 };

@@ -1,7 +1,7 @@
 const artist = {
   title: 'Artists',
   name: 'artist',
-  type: 'object',
+  type: 'document',
   fields: [
     { name: 'name', type: 'string' },
     { name: 'webpage', type: 'string' },
