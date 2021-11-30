@@ -41,12 +41,16 @@ const Home: NextPage<Props> = ({ apes }) => {
                       ))}
                     </p>
                   ) : null}
-                  <a
-                    className="cursor-pointer text-blue-400 hover:text-blue-600 text-xs"
-                    href={xchainUrl}
-                  >
-                    xchain
-                  </a>
+                  {xchainUrl ? (
+                    <a
+                      className="cursor-pointer text-blue-400 hover:text-blue-600 text-xs"
+                      href={xchainUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      xchain
+                    </a>
+                  ) : null}
                 </div>
               </div>
             </div>
