@@ -8,22 +8,29 @@ const sanityClient = new SanityClient();
 const Home: NextPage<Props> = ({ apes }) => {
   return (
     <PageLayout>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-16 py-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-16 py-8 bg-gray-50">
         {apes.map((a) => {
           const heroImageUrl =
-            sanityClient.urlForImageSource(a.image).auto('format').height(255).width(255).url() ??
-            undefined;
+            sanityClient
+              .urlForImageSource(a.image)
+              .auto('format')
+              .height(255)
+              .width(255)
+              .quality(100)
+              .url() ?? undefined;
           const xchainUrl = a.xchainUrl;
           return (
             <div className="flex flex-col items-center" key={heroImageUrl}>
               <div className="shadow-xl">
-                <img
-                  alt={`${a.name ?? 'unnamed'} asset`}
-                  className="bg-pink-50 rounded-t-md"
-                  height="255"
-                  width="255"
-                  src={heroImageUrl}
-                />
+                <MaybeAnchor href={xchainUrl}>
+                  <img
+                    alt={`${a.name ?? 'unnamed'} asset`}
+                    className="bg-pink-50 rounded-t-md"
+                    height="255"
+                    width="255"
+                    src={heroImageUrl}
+                  />
+                </MaybeAnchor>
                 <div className="bg-pink-50 py-2 rounded-b-md flex flex-col items-center">
                   {a.name ? <p className="tracking-wider">{a.name}</p> : null}
                   {a.artists?.length ? (
@@ -60,6 +67,18 @@ const Home: NextPage<Props> = ({ apes }) => {
       </div>
     </PageLayout>
   );
+};
+
+const MaybeAnchor: React.FC<{
+  className?: string;
+  href?: string;
+}> &
+  React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLDivElement | HTMLAnchorElement>,
+    HTMLDivElement | HTMLAnchorElement
+  > = ({ href, ...props }) => {
+  if (href) return <a href={href} {...props} target="_blank" rel="noopener noreferrer" />;
+  return <div {...props} />;
 };
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
