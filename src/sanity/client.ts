@@ -1,6 +1,7 @@
 import Sanity from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
+import type { Ape } from './types';
 
 export class SanityClient extends Sanity {
   static projectId = 'chdhdteo';
@@ -24,8 +25,8 @@ export class SanityClient extends Sanity {
         webpage
       }
     }`;
-    const blogPosts = await this.fetch(apesQuery);
-    return blogPosts;
+    const apes: Ape[] = await this.fetch(apesQuery);
+    return apes;
   }
 
   urlForImageSource(source: SanityImageSource) {

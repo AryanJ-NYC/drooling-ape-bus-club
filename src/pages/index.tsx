@@ -1,6 +1,7 @@
 import type { GetServerSideProps, NextPage } from 'next';
 import { PageLayout } from '../modules/shared/PageLayout';
 import { SanityClient } from '../sanity/client';
+import type { Ape } from '../sanity/types';
 
 const sanityClient = new SanityClient();
 
@@ -67,12 +68,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async () => {
   return { props: { apes } };
 };
 type Props = {
-  apes: {
-    artists: { name: string; webpage: string }[];
-    image: string;
-    name: string;
-    xchainUrl?: string;
-  }[];
+  apes: Ape[];
 };
 
 export default Home;
