@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
@@ -8,6 +9,10 @@ import squareLogo from '../../../public/logo_square.png';
 export const PageLayout: React.FC = ({ children }) => {
   return (
     <div>
+      <Head>
+        <link rel="shortcut icon" href={squareLogo.src} type="image/x-icon" />
+        <title>Drooling Ape Bus Club</title>
+      </Head>
       <header className="bg-pink-50 py-4">
         <div className="flex items-center justify-between px-8 md:px-24">
           <Link href="/">
