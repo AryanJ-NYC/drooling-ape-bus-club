@@ -6,9 +6,10 @@ const handler: NextApiHandler = async (req, res) => {
 
   const sanity = new SanityClient();
   const apes = await sanity.getApes();
-  const nameToImage = apes
-    .filter((a) => a.xchainUrl)
-    .reduce((o, ape) => ({ ...o, [ape.name]: sanity.urlForImageSource(ape.image).url() }), {});
+  const nameToImage = apes.reduce(
+    (o, ape) => ({ ...o, [ape.name]: sanity.urlForImageSource(ape.image).url() }),
+    {}
+  );
   return res.json(nameToImage);
 };
 

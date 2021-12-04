@@ -3,16 +3,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import { FaTelegramPlane } from 'react-icons/fa';
-import horizontalLogo from '../../../public/logo_horizontal.png';
-import squareLogo from '../../../public/logo_square.png';
+import horizontalLogo from '../../../../public/logo_horizontal.png';
+import squareLogo from '../../../../public/logo_square.png';
 
 export const PageLayout: React.FC = ({ children }) => {
   return (
     <div>
-      <Head>
-        <link rel="shortcut icon" href={squareLogo.src} type="image/x-icon" />
-        <title>Drooling Ape Bus Club</title>
-      </Head>
+      <SEO />
       <header className="bg-pink-50 py-4">
         <div className="flex items-center justify-between px-8 md:px-24">
           <Link href="/">
@@ -42,5 +39,29 @@ export const PageLayout: React.FC = ({ children }) => {
       </header>
       {children}
     </div>
+  );
+};
+
+const description = 'Because the other apes are boring.';
+const horizontalLogoSrc = horizontalLogo.src;
+const title = 'Drooling Ape Bus Club';
+const SEO: React.FC = () => {
+  return (
+    <Head>
+      <link rel="shortcut icon" href={squareLogo.src} type="image/x-icon" />
+      <title>{title}</title>
+      <meta name="description" content={description} />
+      <meta name="image" content={horizontalLogoSrc} />
+
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:description" content={description} />
+      <meta name="twitter:image" content={horizontalLogoSrc} />
+      <meta name="twitter:creator" content="@AryanJabbari" />
+      <meta name="twitter:title" content={title} />
+
+      <meta name="og:image" content={horizontalLogoSrc} />
+      <meta name="og:type" content="website" />
+      <meta name="og:title" content={title} />
+    </Head>
   );
 };

@@ -10,7 +10,6 @@ const ape = {
       options: { hotspot: true },
     },
     { title: 'Name', name: 'name', type: 'string' },
-    { title: 'xchain URL', name: 'xchainUrl', type: 'url' },
     {
       title: 'Artists',
       name: 'artists',

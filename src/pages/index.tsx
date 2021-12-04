@@ -1,5 +1,6 @@
-import type { GetServerSideProps, NextPage } from 'next';
-import { PageLayout } from '../modules/shared/PageLayout';
+import shuffle from 'lodash.shuffle';
+import type { GetStaticProps, NextPage } from 'next';
+import { PageLayout } from '../modules/shared/components/PageLayout';
 import { SanityClient } from '../sanity/client';
 import type { Ape } from '../sanity/types';
 
@@ -16,9 +17,9 @@ const Home: NextPage<Props> = ({ apes }) => {
               .auto('format')
               .height(255)
               .width(255)
-              .quality(100)
+              .quality(67)
               .url() ?? undefined;
-          const xchainUrl = a.xchainUrl;
+          const xchainUrl = `https://xchain.io/asset/${a.name}`;
           return (
             <div className="flex flex-col items-center" key={heroImageUrl}>
               <div className="shadow-xl">
@@ -49,16 +50,14 @@ const Home: NextPage<Props> = ({ apes }) => {
                       ))}
                     </p>
                   ) : null}
-                  {xchainUrl ? (
-                    <a
-                      className="cursor-pointer text-blue-400 hover:text-blue-600 text-xs"
-                      href={xchainUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      xchain
-                    </a>
-                  ) : null}
+                  <a
+                    className="cursor-pointer text-blue-400 hover:text-blue-600 text-xs"
+                    href={xchainUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    xchain
+                  </a>
                 </div>
               </div>
             </div>
@@ -81,10 +80,11 @@ const MaybeAnchor: React.FC<{
   return <div {...props} />;
 };
 
-export const getServerSideProps: GetServerSideProps<Props> = async () => {
+export const getStaticProps: GetStaticProps<Props> = async () => {
   const sanity = new SanityClient();
   const apes = await sanity.getApes();
-  return { props: { apes } };
+  const shuffledApes = [apes[0], ...shuffle(apes.slice(1))];
+  return { props: { apes: shuffledApes }, revalidate: 60 * 5 };
 };
 type Props = {
   apes: Ape[];
