@@ -43,7 +43,7 @@ export const PageLayout: React.FC = ({ children }) => {
 };
 
 const description = 'Because the other apes are boring.';
-const horizontalLogoSrc = horizontalLogo.src;
+const cardImageSrc = 'https://drooling-ape-bus-club.s3.amazonaws.com/DERPYMONA.jpg';
 const title = 'Drooling Ape Bus Club';
 const SEO: React.FC = () => {
   return (
@@ -51,15 +51,15 @@ const SEO: React.FC = () => {
       <link rel="shortcut icon" href={squareLogo.src} type="image/x-icon" />
       <title>{title}</title>
       <meta name="description" content={description} />
-      <meta name="image" content={horizontalLogoSrc} />
+      <meta name="image" content={cardImageSrc} />
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={horizontalLogoSrc} />
+      <meta name="twitter:image" content={cardImageSrc} />
       <meta name="twitter:creator" content="@AryanJabbari" />
       <meta name="twitter:title" content={title} />
 
-      <meta name="og:image" content={horizontalLogoSrc} />
+      <meta name="og:image" content={cardImageSrc} />
       <meta name="og:type" content="website" />
       <meta name="og:title" content={title} />
     </Head>

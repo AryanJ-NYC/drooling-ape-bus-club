@@ -84,7 +84,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
   const sanity = new SanityClient();
   const apes = await sanity.getApes();
   const shuffledApes = [apes[0], ...shuffle(apes.slice(1))];
-  return { props: { apes: shuffledApes }, revalidate: 60 * 5 };
+  return { props: { apes: shuffledApes }, revalidate: 30 };
 };
 type Props = {
   apes: Ape[];
