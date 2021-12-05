@@ -29,6 +29,20 @@ export class SanityClient extends Sanity {
     return apes;
   }
 
+  async getApesBySeries(seriesNumber: string) {
+    const seriesNo = Number(seriesNumber);
+    if (isNaN(seriesNo)) throw new Error('seriesNumber is not a number');
+    const apesQuery = /* groq */ `*[_type == 'ape' && series == $seriesNumber] | order(order asc) {
+      ...,
+      artists[] -> {
+        name,
+        webpage
+      }
+    }`;
+    const apes: Ape[] = await this.fetch(apesQuery, { seriesNumber: seriesNo });
+    return apes;
+  }
+
   urlForImageSource(source: SanityImageSource) {
     return this.builder.image(source);
   }

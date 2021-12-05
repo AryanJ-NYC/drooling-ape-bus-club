@@ -4,7 +4,7 @@ import type { Ape } from '../../../sanity/types';
 
 const sanityClient = new SanityClient();
 export const ApeCard: React.FC<Props> = ({ ape }) => {
-  const heroImageUrl =
+  const imageUrl =
     sanityClient
       .urlForImageSource(ape.image)
       .auto('format')
@@ -21,10 +21,10 @@ export const ApeCard: React.FC<Props> = ({ ape }) => {
           className="bg-pink-50 rounded-t-md"
           height="255"
           width="255"
-          src={heroImageUrl}
+          src={imageUrl}
         />
       </MaybeAnchor>
-      <div className="bg-pink-50 py-2 rounded-b-md flex flex-col items-center">
+      <ApeCardCaptionContainer>
         {ape.name ? <p className="tracking-wider">{ape.name}</p> : null}
         {ape.artists?.length ? (
           <p className="text-xs">
@@ -50,7 +50,7 @@ export const ApeCard: React.FC<Props> = ({ ape }) => {
         >
           xchain
         </a>
-      </div>
+      </ApeCardCaptionContainer>
     </ApeCardContainer>
   );
 };
@@ -59,6 +59,10 @@ export const ApeCardContainer: React.FC = ({ children }) => (
   <div className="flex flex-col items-center">
     <div className="shadow-xl">{children}</div>
   </div>
+);
+
+export const ApeCardCaptionContainer: React.FC = ({ children }) => (
+  <div className="bg-pink-50 py-2 rounded-b-md flex flex-col items-center">{children}</div>
 );
 
 const MaybeAnchor: React.FC<{

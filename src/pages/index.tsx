@@ -1,17 +1,47 @@
+import groupBy from 'lodash/groupBy';
+import sample from 'lodash/sample';
 import type { GetStaticProps, NextPage } from 'next';
-import { ApeCard } from '../modules/shared/components/ApeCard';
+import Link from 'next/link';
+import { ApeCardCaptionContainer, ApeCardContainer } from '../modules/shared/components/ApeCard';
+import { ApeGrid } from '../modules/shared/components/ApeGrid';
 import { PageLayout } from '../modules/shared/components/PageLayout';
 import { SanityClient } from '../sanity/client';
 import type { Ape } from '../sanity/types';
 
-const Home: NextPage<Props> = ({ apes }) => {
+const sanityClient = new SanityClient();
+const Home: NextPage<Props> = ({ seriesToApe }) => {
   return (
     <PageLayout>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-16 py-8 bg-gray-50">
-        {apes.map((a) => (
-          <ApeCard ape={a} key={a.name} />
-        ))}
-      </div>
+      <ApeGrid>
+        {Object.entries(seriesToApe).map(([seriesNumber, ape]) => {
+          const imageUrl =
+            sanityClient
+              .urlForImageSource(ape.image)
+              .auto('format')
+              .height(255)
+              .width(255)
+              .quality(67)
+              .url() ?? undefined;
+          return (
+            <Link key={seriesNumber} href={`/series/${seriesNumber}`}>
+              <a>
+                <ApeCardContainer>
+                  <img
+                    alt={`${ape.name ?? 'unnamed'} asset`}
+                    className="bg-pink-50 rounded-t-md"
+                    height="255"
+                    width="255"
+                    src={imageUrl}
+                  />
+                  <ApeCardCaptionContainer>
+                    <p className="tracking-widest uppercase">Series {seriesNumber}</p>
+                  </ApeCardCaptionContainer>
+                </ApeCardContainer>
+              </a>
+            </Link>
+          );
+        })}
+      </ApeGrid>
     </PageLayout>
   );
 };
@@ -19,10 +49,15 @@ const Home: NextPage<Props> = ({ apes }) => {
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const sanity = new SanityClient();
   const apes = await sanity.getApes();
-  return { props: { apes }, revalidate: 60 };
+  const apesGroupedBySeries = groupBy(apes, 'series');
+  const seriesToApe = Object.entries(apesGroupedBySeries).reduce(
+    (prev, [series, _apes]) => ({ [series]: sample(_apes), ...prev }),
+    {}
+  );
+  return { props: { seriesToApe }, revalidate: 60 };
 };
 type Props = {
-  apes: Ape[];
+  seriesToApe: Record<string, Ape>;
 };
 
 export default Home;
