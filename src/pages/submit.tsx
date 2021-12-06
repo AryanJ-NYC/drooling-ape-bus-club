@@ -1,5 +1,6 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { toast, Toaster } from 'react-hot-toast';
 import { PageLayout } from '../modules/shared/components/PageLayout';
 
 const Submit = () => {
@@ -29,6 +30,7 @@ const Submit = () => {
         </div>
         <SubmissionForm />
       </div>
+      <Toaster />
     </PageLayout>
   );
 };
@@ -37,7 +39,8 @@ const SubmissionForm: React.FC = () => {
   const {
     handleSubmit,
     register,
-    formState: { errors },
+    reset,
+    formState: { isSubmitting },
   } = useForm();
 
   return (
@@ -49,18 +52,26 @@ const SubmissionForm: React.FC = () => {
         formData.append('contact', data.contact);
         formData.append('file', data.file[0]);
         await fetch('/api/submit', { method: 'POST', body: formData });
+        toast.success('Your ape has been submitted!');
+        reset();
       })}
     >
       <StyledLabel>
         <p className="text-sm font-medium">Ape Name</p>
-        <StyledInput {...register('apeName')} />
+        <StyledInput {...register('apeName')} required />
       </StyledLabel>
       <StyledLabel>
         <p className="text-sm font-medium">Your Contact (Telegram, Twitter or Email)</p>
-        <StyledInput {...register('contact')} />
+        <StyledInput {...register('contact')} required />
       </StyledLabel>
-      <input type="file" {...register('file')} />
-      <button type="submit">Submit</button>
+      <input type="file" {...register('file')} required />
+      <button
+        className="bg-purple-500 p-2 rounded-md text-white"
+        disabled={isSubmitting}
+        type="submit"
+      >
+        Submit
+      </button>
     </form>
   );
 };
