@@ -1,36 +1,16 @@
 import Head from 'next/head';
-import Image from 'next/image';
-import Link from 'next/link';
 import React from 'react';
 import { FaTelegramPlane, FaTwitter } from 'react-icons/fa';
-import horizontalLogo from '../../../../public/logo_horizontal.png';
-import squareLogo from '../../../../public/logo_square.png';
+import squareLogo from '../../../../../public/logo_square.png';
+import { Header } from './Header';
 
 export const PageLayout: React.FC = ({ children }) => {
   return (
     <div>
       <SEO />
       <div className="flex flex-col min-h-screen">
-        <header className="bg-pink-50 py-4">
-          <div className="flex items-center justify-between px-8 md:px-24">
-            <Link href="/">
-              <a className="flex items-end space-x-4">
-                <div className="block lg:hidden">
-                  <Image alt="Drooling Ape Bus Club logo" height="80" width="80" src={squareLogo} />
-                </div>
-                <div className="hidden lg:block">
-                  <Image
-                    alt="Drooling Ape Bus Club logo"
-                    height="80"
-                    width="250"
-                    src={horizontalLogo}
-                  />
-                </div>
-              </a>
-            </Link>
-          </div>
-        </header>
-        <main className="flex-1 bg-gray-50">{children}</main>
+        <Header />
+        <main className="flex-1 bg-gray-50 px-16 py-8">{children}</main>
         <footer className="bg-purple-50 px-8 md:px-24 py-4 flex justify-center space-x-6">
           <a
             className="text-purple-400 hover:text-purple-500 cursor-pointer"
