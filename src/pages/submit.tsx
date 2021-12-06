@@ -51,9 +51,13 @@ const SubmissionForm: React.FC = () => {
         formData.append('apeName', data.apeName);
         formData.append('contact', data.contact);
         formData.append('file', data.file[0]);
-        await fetch('/api/submit', { method: 'POST', body: formData });
-        toast.success('Your ape has been submitted!');
-        reset();
+        const response = await fetch('/api/submit', { method: 'POST', body: formData });
+        if (response.ok) {
+          toast.success('Your ape has been submitted!');
+          reset();
+        } else {
+          toast.error('Something went wrong. Please try again or contact Aryan');
+        }
       })}
     >
       <StyledLabel>
@@ -64,7 +68,7 @@ const SubmissionForm: React.FC = () => {
         <p className="text-sm font-medium">Your Contact (Telegram, Twitter or Email)</p>
         <StyledInput {...register('contact')} required />
       </StyledLabel>
-      <input type="file" {...register('file')} required />
+      <input accept="image/png, image/jpeg, image/gif" type="file" {...register('file')} required />
       <button
         className="bg-purple-500 p-2 rounded-md text-white"
         disabled={isSubmitting}

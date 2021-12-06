@@ -17,10 +17,17 @@ const apiRouter = nextConnect({
 apiRouter.use(middleware);
 apiRouter.post(
   async (req: NextApiRequest & { file: Express.Multer.File }, res: NextApiResponse) => {
-    await bot.sendPhoto(process.env.TELEGRAM_SUBMISSION_CHANNEL_ID, req.file.buffer, {
-      caption: `${req.body.contact} has submitted ${req.body.apeName}`,
-    });
-    res.status(200).end();
+    const isGif = req.file.mimetype === 'image/gif';
+    const send = isGif ? bot.sendAnimation.bind(bot) : bot.sendPhoto.bind(bot);
+    try {
+      await send(process.env.TELEGRAM_SUBMISSION_CHANNEL_ID, req.file.buffer, {
+        caption: `${req.body.contact} has submitted ${req.body.apeName}`,
+      });
+      return res.status(200).end();
+    } catch (e) {
+      console.error(e);
+      return res.status(400).end();
+    }
   }
 );
 
