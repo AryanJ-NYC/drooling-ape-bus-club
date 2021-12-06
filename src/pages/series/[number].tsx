@@ -27,7 +27,7 @@ const sanity = new SanityClient();
 export const getStaticProps: GetStaticProps<Props, { number: string }> = async ({ params }) => {
   if (!params) throw new Error();
   const apes = await sanity.getApesBySeries(params.number);
-  return { props: { apes } };
+  return { props: { apes }, revalidate: 60 * 5 };
 };
 type Props = { apes: Ape[] };
 

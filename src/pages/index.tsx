@@ -54,7 +54,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     (prev, [series, _apes]) => ({ [series]: sample(_apes), ...prev }),
     {}
   );
-  return { props: { seriesToApe }, revalidate: 60 };
+  return { props: { seriesToApe }, revalidate: 60 * 5 };
 };
 type Props = {
   seriesToApe: Record<string, Ape>;

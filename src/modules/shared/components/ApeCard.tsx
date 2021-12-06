@@ -31,7 +31,7 @@ export const ApeCard: React.FC<Props> = ({ ape }) => {
             by{' '}
             {ape.artists.map((artist) => (
               <a
-                className="text-blue-400 hover:text-blue-600"
+                className="px-0.5 text-blue-400 hover:text-blue-600"
                 href={artist.webpage}
                 key={artist.name}
                 target="_blank"
