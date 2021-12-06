@@ -15,12 +15,14 @@ const apiRouter = nextConnect({
   },
 });
 apiRouter.use(middleware);
-apiRouter.post((req: NextApiRequest & { file: Express.Multer.File }, res: NextApiResponse) => {
-  bot.sendPhoto(process.env.TELEGRAM_SUBMISSION_CHANNEL_ID, req.file.buffer, {
-    caption: `${req.body.contact} has submitted ${req.body.apeName}`,
-  });
-  res.status(200).end();
-});
+apiRouter.post(
+  async (req: NextApiRequest & { file: Express.Multer.File }, res: NextApiResponse) => {
+    await bot.sendPhoto(process.env.TELEGRAM_SUBMISSION_CHANNEL_ID, req.file.buffer, {
+      caption: `${req.body.contact} has submitted ${req.body.apeName}`,
+    });
+    res.status(200).end();
+  }
+);
 
 export const config = {
   api: {
