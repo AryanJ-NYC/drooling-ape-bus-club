@@ -1,6 +1,8 @@
+import clsx from 'clsx';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast, Toaster } from 'react-hot-toast';
+import { FaSpinner } from 'react-icons/fa';
 import { PageLayout } from '../modules/shared/components/PageLayout';
 
 const Submit = () => {
@@ -69,17 +71,30 @@ const SubmissionForm: React.FC = () => {
         <StyledInput {...register('contact')} required />
       </StyledLabel>
       <input accept="image/png, image/jpeg, image/gif" type="file" {...register('file')} required />
-      <button
+      <ButtonBusySpinner
         className="bg-purple-500 p-2 rounded-md text-white"
         disabled={isSubmitting}
+        isBusy={isSubmitting}
         type="submit"
       >
         Submit
-      </button>
+      </ButtonBusySpinner>
     </form>
   );
 };
 
+const ButtonBusySpinner: React.FC<
+  React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> & {
+    isBusy?: boolean;
+  }
+> = ({ children, className, isBusy, ...props }) => {
+  return (
+    <button {...props} className={clsx(className, 'flex justify-center items-center')}>
+      <span className={clsx(isBusy && 'invisible')}> {children}</span>
+      <span className="absolute animate-spin">{isBusy && <FaSpinner />}</span>
+    </button>
+  );
+};
 const StyledLabel: React.FC<
   React.DetailedHTMLProps<React.LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>
 > = (props) => <label {...props} className="flex flex-col w-full space-y-1" />;
