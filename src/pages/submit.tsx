@@ -61,7 +61,7 @@ const SubmissionForm: React.FC = () => {
       })}
     >
       <StyledLabel>
-        <p className="text-sm font-medium">Ape Name</p>
+        <p className="text-sm font-medium">Asset Name</p>
         <StyledInput {...register('apeName')} required />
       </StyledLabel>
       <StyledLabel>
