@@ -9,27 +9,33 @@ const bot = new TelegramBot(token);
 const upload = multer();
 const middleware = upload.single('file');
 
-const apiRouter = nextConnect({
-  onNoMatch(_, res: NextApiResponse) {
+const apiRouter = nextConnect<NextApiRequest & { file: Express.Multer.File }, NextApiResponse>({
+  onNoMatch(_, res) {
     res.status(405).end();
   },
-});
-apiRouter.use(middleware);
-apiRouter.post(
-  async (req: NextApiRequest & { file: Express.Multer.File }, res: NextApiResponse) => {
+})
+  .use(middleware)
+  .post(async (req, res) => {
     const isGif = req.file.mimetype === 'image/gif';
     const send = isGif ? bot.sendAnimation.bind(bot) : bot.sendPhoto.bind(bot);
     try {
-      await send(process.env.TELEGRAM_SUBMISSION_CHANNEL_ID, req.file.buffer, {
-        caption: `${req.body.contact} has submitted ${req.body.apeName}`,
-      });
+      const { apeName, contact } = req.body;
+      await Promise.all([
+        send(process.env.TELEGRAM_SUBMISSION_CHANNEL_ID, req.file.buffer, {
+          caption: `${contact} has submitted ${apeName}`,
+        }),
+        fetch('https://hook.integromat.com/8mix5hofy439qpeozryd6megg1edasni', {
+          body: JSON.stringify({ apeName, contact }),
+          headers: { 'content-type': 'application/json' },
+          method: 'POST',
+        }),
+      ]);
       return res.status(200).end();
     } catch (e) {
       console.error(e);
       return res.status(400).end();
     }
-  }
-);
+  });
 
 export const config = {
   api: {
