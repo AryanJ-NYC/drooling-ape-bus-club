@@ -63,8 +63,13 @@ const SubmissionForm: React.FC = () => {
       })}
     >
       <StyledLabel>
-        <p className="text-sm font-medium">Asset Name</p>
-        <StyledInput {...register('apeName')} required />
+        <p className="text-sm font-medium">Asset Xchain Link (don&apos;t forget https://)</p>
+        <StyledInput
+          {...register('apeName')}
+          placeholder="https://xchain.io/asset/..."
+          required
+          type="url"
+        />
       </StyledLabel>
       <StyledLabel>
         <p className="text-sm font-medium">Your Contact (Telegram, Twitter or Email)</p>
