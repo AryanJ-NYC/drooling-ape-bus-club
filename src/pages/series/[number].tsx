@@ -19,8 +19,7 @@ const SeriesPage: NextPage<Props> = ({ apes }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = () => {
-  // TODO: get series numbers from Sanity
-  return { fallback: false, paths: [{ params: { number: '1' } }, { params: { number: '2' } }] };
+  return { fallback: true, paths: [] };
 };
 
 const sanity = new SanityClient();
