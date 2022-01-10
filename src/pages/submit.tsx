@@ -24,7 +24,7 @@ const Submit = () => {
             <li>Issuance must be a minimum of 69</li>
             <li>Only 1 submission per artist until approved or denied</li>
             <li>
-              if you just take an existing Bored Ape and add a hat or some drool, that&apos;s not
+              If you just take an existing Bored Ape and add a hat or some drool, that&apos;s not
               really what we&apos;re looking for. While Drooling Apes can resemble Bored Apes, the
               drawing should be original, not just a copy of a Bored Ape.
             </li>
@@ -55,21 +55,17 @@ const SubmissionForm: React.FC = () => {
         formData.append('file', data.file[0]);
         const response = await fetch('/api/submit', { method: 'POST', body: formData });
         if (response.ok) {
-          toast.success('Your ape has been submitted!');
+          toast.success(`${data.apeName} has been submitted!`, { duration: 30_000 });
           reset();
         } else {
-          toast.error('Something went wrong. Please try again or contact Aryan');
+          const { error } = await response.json();
+          toast.error(error ?? 'Something went wrong. Please try again or contact Aryan');
         }
       })}
     >
       <StyledLabel>
-        <p className="text-sm font-medium">Asset Xchain Link (don&apos;t forget https://)</p>
-        <StyledInput
-          {...register('apeName')}
-          placeholder="https://xchain.io/asset/..."
-          required
-          type="url"
-        />
+        <p className="text-sm font-medium">Xchain Asset Name</p>
+        <StyledInput {...register('apeName')} required />
       </StyledLabel>
       <StyledLabel>
         <p className="text-sm font-medium">Your Contact (Telegram, Twitter or Email)</p>

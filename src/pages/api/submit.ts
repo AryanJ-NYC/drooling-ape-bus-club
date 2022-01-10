@@ -1,7 +1,8 @@
 import multer from 'multer';
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import nextConnect from 'next-connect';
 import TelegramBot from 'node-telegram-bot-api';
+import type { Union } from 'ts-toolbelt';
 
 const token = process.env.TELEGRAM_SUBMISSION_CHANNEL_TOKEN;
 const bot = new TelegramBot(token);
@@ -9,12 +10,33 @@ const bot = new TelegramBot(token);
 const upload = multer();
 const middleware = upload.single('file');
 
+const minimumNumberIssued = 69;
 const apiRouter = nextConnect<NextApiRequest & { file: Express.Multer.File }, NextApiResponse>({
   onNoMatch(_, res) {
     res.status(405).end();
   },
 })
   .use(middleware)
+  .use(async (req: NextApiRequest, res: NextApiResponse, next) => {
+    const { apeName } = req.body;
+    const resp = await fetch(`https://xchain.io/api/asset/${apeName}`);
+    const xchainAsset: XchainAsset = await resp.json();
+    if (typeof xchainAsset.error === 'string') {
+      return res.status(400).json({ error: 'This asset not found on xchain.' });
+    }
+    if (typeof xchainAsset.supply === 'number' && xchainAsset.supply < minimumNumberIssued) {
+      return res
+        .status(400)
+        .json({ error: `A minimum of ${minimumNumberIssued} must be initially issued` });
+    }
+    if (xchainAsset.divisible) {
+      return res.status(400).json({ error: `Asset must not be divisible` });
+    }
+    if (!xchainAsset.locked) {
+      return res.status(400).json({ error: `Asset must be locked` });
+    }
+    next();
+  })
   .post(async (req, res) => {
     const isGif = req.file.mimetype === 'image/gif';
     const send = isGif ? bot.sendAnimation.bind(bot) : bot.sendPhoto.bind(bot);
@@ -37,10 +59,11 @@ const apiRouter = nextConnect<NextApiRequest & { file: Express.Multer.File }, Ne
     }
   });
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+export const config = { api: { bodyParser: false } };
 
 export default apiRouter;
+
+type XchainAsset = Union.Strict<
+  | { error: string }
+  | { asset: string; asset_id: string; divisible: boolean; locked: true; supply: number }
+>;
