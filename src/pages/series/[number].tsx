@@ -20,8 +20,8 @@ const SeriesPage: NextPage<Props> = ({ apes }) => {
   return (
     <PageLayout>
       <ApeGrid>
-        {apes.map((a) => (
-          <ApeCard ape={a} key={a.name} />
+        {apes.map((a, i) => (
+          <ApeCard ape={a} key={a.name} order={i + 1} />
         ))}
       </ApeGrid>
     </PageLayout>

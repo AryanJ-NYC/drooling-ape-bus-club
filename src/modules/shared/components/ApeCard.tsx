@@ -3,7 +3,7 @@ import { SanityClient } from '../../../sanity/client';
 import type { Ape } from '../../../sanity/types';
 
 const sanityClient = new SanityClient();
-export const ApeCard: React.FC<Props> = ({ ape }) => {
+export const ApeCard: React.FC<Props> = ({ ape, order }) => {
   const imageUrl =
     sanityClient
       .urlForImageSource(ape.image)
@@ -26,6 +26,7 @@ export const ApeCard: React.FC<Props> = ({ ape }) => {
       </MaybeAnchor>
       <ApeCardCaptionContainer>
         {ape.name ? <p className="tracking-wider">{ape.name}</p> : null}
+        <p className="text-xs">Card {order}</p>
         {ape.artists?.length ? (
           <p className="text-xs">
             by{' '}
@@ -42,14 +43,6 @@ export const ApeCard: React.FC<Props> = ({ ape }) => {
             ))}
           </p>
         ) : null}
-        <a
-          className="cursor-pointer text-blue-400 hover:text-blue-600 text-xs"
-          href={xchainUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          xchain
-        </a>
       </ApeCardCaptionContainer>
     </ApeCardContainer>
   );
@@ -77,4 +70,4 @@ const MaybeAnchor: React.FC<{
   return <div {...props} />;
 };
 
-type Props = { ape: Ape };
+type Props = { ape: Ape; order: number };
