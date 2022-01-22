@@ -1,4 +1,3 @@
-import groupBy from 'lodash/groupBy';
 import sample from 'lodash/sample';
 import type { GetStaticProps, NextPage } from 'next';
 import Link from 'next/link';
@@ -48,12 +47,10 @@ const Home: NextPage<Props> = ({ seriesToApe }) => {
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const sanity = new SanityClient();
-  const apes = await sanity.getApes();
-  const apesGroupedBySeries = groupBy(apes, 'series');
-  const seriesToApe = Object.entries(apesGroupedBySeries).reduce(
-    (prev, [series, _apes]) => ({ [series]: sample(_apes), ...prev }),
-    {}
-  );
+  const apes = await sanity.getAllApesGroupedBySeries();
+  const seriesToApe = apes.reduce((prev, curr, currI) => {
+    return { [currI + 1]: sample(curr.apes), ...prev };
+  }, {});
   return { props: { seriesToApe }, revalidate: 60 * 5 };
 };
 type Props = {
