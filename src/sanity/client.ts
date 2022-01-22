@@ -29,17 +29,27 @@ export class SanityClient extends Sanity {
     return apes;
   }
 
-  async getApesBySeries(seriesNumber: string) {
+  async getAllApesGroupedBySeries() {
+    const query = /* groq */ `*[_type == 'series'] | order(series asc) {
+      apes[] -> { image }
+    }`;
+    const apes: { apes: [{ image: Ape['image'] }] }[] = await this.fetch(query);
+    return apes;
+  }
+
+  async getApesBySeries(seriesNumber: string): Promise<Ape[]> {
     const seriesNo = Number(seriesNumber);
     if (isNaN(seriesNo)) throw new Error('seriesNumber is not a number');
-    const apesQuery = /* groq */ `*[_type == 'ape' && series == $seriesNumber] | order(order asc) {
-      ...,
-      artists[] -> {
-        name,
-        webpage
+    const apesQuery = /* groq */ `*[_type == 'series' && series == $seriesNumber] | order(series asc) {
+      apes[] -> {
+        ...,
+        artists[] -> {
+          name,
+          webpage
+        }
       }
-    }`;
-    const apes: Ape[] = await this.fetch(apesQuery, { seriesNumber: seriesNo });
+    }[0].apes`;
+    const apes = await this.fetch(apesQuery, { seriesNumber: seriesNo });
     return apes;
   }
 

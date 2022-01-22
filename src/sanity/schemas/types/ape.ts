@@ -16,8 +16,6 @@ const ape = {
       type: 'array',
       of: [{ type: 'reference', to: { type: 'artist' } }],
     },
-    { title: 'Series', name: 'series', type: 'number' },
-    { name: 'order', title: 'Order', type: 'number', hidden: true },
   ],
 };
 
