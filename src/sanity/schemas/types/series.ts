@@ -9,6 +9,7 @@ const series = {
       name: 'apes',
       type: 'array',
       of: [{ type: 'reference', name: 'ape', to: [{ type: 'ape' }] }],
+      validation: (Rule: any) => Rule.max(69),
     },
   ],
 };
