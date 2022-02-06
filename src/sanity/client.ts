@@ -23,9 +23,12 @@ export class SanityClient extends Sanity {
       artists[] -> {
         name,
         webpage
-      }
+      },
+      "series": *[_type=='series' && references(^._id)] {
+        series
+      }[0].series
     }`;
-    const apes: Ape[] = await this.fetch(apesQuery);
+    const apes: (Ape & { series: number })[] = await this.fetch(apesQuery);
     return apes;
   }
 
