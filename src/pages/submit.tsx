@@ -9,7 +9,7 @@ const Submit = () => {
   return (
     <PageLayout>
       <div className="max-w-lg space-y-6">
-        <div className="">
+        <div className="space-y-4">
           <p className="text-lg tracking-wider uppercase">Submission Rules</p>
           <ol className="list-decimal list-inside space-y-1">
             <li>
@@ -17,7 +17,7 @@ const Submit = () => {
               protection.
             </li>
             <li>Submission must be 1080x1080</li>
-            <li>3MB cutoff for GIFs; 1MB pixels cutoff for PNGs, JPGs, etc.</li>
+            <li>5MB cutoff for GIFs; 1MB pixels cutoff for PNGs, JPGs, etc.</li>
             <li>Token must not be divisible</li>
             <li>Token must be locked</li>
             <li>Do not send token until approved for series</li>
@@ -29,6 +29,17 @@ const Submit = () => {
               drawing should be original, not just a copy of a Bored Ape.
             </li>
           </ol>
+          <div className="space-y-2">
+            <p>
+              There is a 5MB upload limit to what the server can handle. If your file is bigger than
+              that, it&apos;ll fail.
+            </p>
+            <p>
+              That is not to say your asset can&apos;t be greater than 5MB. It can be whatever
+              you&apos;d like on xchain. Simply upload a smaller GIF or a static image
+              representation of your GIF.
+            </p>
+          </div>
         </div>
         <SubmissionForm />
       </div>
@@ -58,8 +69,13 @@ const SubmissionForm: React.FC = () => {
           toast.success(`${data.apeName} has been submitted!`, { duration: 30_000 });
           reset();
         } else {
-          const { error } = await response.json();
-          toast.error(error ?? 'Something went wrong. Please try again or contact Aryan');
+          try {
+            const { error } = await response.json();
+            toast.error(error ?? 'Something went wrong. Please try again or contact Aryan');
+          } catch (e) {
+            console.error(e);
+            toast.error('Something went wrong. Did you keep this file below 5MB?');
+          }
         }
       })}
     >
