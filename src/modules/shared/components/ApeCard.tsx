@@ -44,9 +44,9 @@ export const ApeCard: React.FC<Props> = ({ ape, order }) => {
             ))}
           </p>
         ) : null}
-        {ape.cheapestDispenser ? (
+        {ape.cheapestPrice ? (
           <p className="text-sm">
-            {ape.cheapestDispenser.toLocaleString(undefined, { maximumFractionDigits: 8 })} BTC
+            {ape.cheapestPrice.toLocaleString(undefined, { maximumFractionDigits: 8 })} BTC
           </p>
         ) : null}
       </ApeCardCaptionContainer>
@@ -66,4 +66,4 @@ export const ApeCardCaptionContainer: React.FC = ({ children }) => (
   </div>
 );
 
-type Props = { ape: Ape & { cheapestDispenser: number | null }; order: number };
+type Props = { ape: Ape & { cheapestPrice: number | null }; order: number };

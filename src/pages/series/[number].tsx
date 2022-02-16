@@ -1,4 +1,5 @@
-import { satoshisToBitcoin } from 'bitcoin-conversion';
+import { getXcpBtcRate, satoshisToBitcoin } from 'bitcoin-conversion';
+import Decimal from 'decimal.js-light';
 import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -37,7 +38,11 @@ export const getStaticProps: GetStaticProps<Props, { number: string }> = async (
 
   const cp = new Counterparty();
   const apeNames = apes.map((a) => a.name);
-  const dispensers = await cp.getDispensersByAssetNames(apeNames);
+  const [dispensers, orders] = await Promise.all([
+    cp.getDispensersByAssetNames(apeNames),
+    cp.getordersByAssetNames(apeNames),
+  ]);
+
   const apeNameToCheapestDispenserPrice = dispensers.reduce((prev, dispenser) => {
     if (!prev[dispenser.asset]) {
       return { ...prev, [dispenser.asset]: satoshisToBitcoin(dispenser.satoshirate) };
@@ -50,18 +55,54 @@ export const getStaticProps: GetStaticProps<Props, { number: string }> = async (
     };
   }, {} as Record<string, number | undefined>);
 
+  const xcpRate = await getXcpBtcRate();
+  const apeNameToCheapestOrderPrice = orders
+    .filter((o) => o.get_asset === 'XCP')
+    .reduce((prev, order) => {
+      const assetName = order.give_asset;
+      const currentValue = prev[assetName];
+      const priceInBtc = satoshisToBitcoin(
+        new Decimal(xcpRate).mul(order.get_quantity).div(order.give_quantity).toNumber()
+      );
+      if (!currentValue) {
+        return {
+          ...prev,
+          [order.give_asset]: priceInBtc,
+        };
+      }
+      return {
+        ...prev,
+        [assetName]: Math.min(currentValue ?? 0, priceInBtc),
+      };
+    }, {} as Record<string, number>);
+
   return {
     props: {
-      apes: apes.map((a) => ({
-        ...a,
-        cheapestDispenser: apeNameToCheapestDispenserPrice[a.name] ?? null,
-      })),
+      apes: apes.map((a) => {
+        const cheapestDispenser = apeNameToCheapestDispenserPrice[a.name];
+        const cheapestOrder = apeNameToCheapestOrderPrice[a.name];
+        return {
+          ...a,
+          cheapestPrice: calculateCheapestPrice({ cheapestDispenser, cheapestOrder }),
+        };
+      }),
     },
     revalidate: 60 * 5,
   };
 };
+
+const calculateCheapestPrice = ({ cheapestDispenser, cheapestOrder }: CheapestPriceParams) => {
+  if (cheapestDispenser && !cheapestOrder) return cheapestDispenser;
+  if (!cheapestDispenser && cheapestOrder) return cheapestOrder;
+  if (cheapestDispenser && cheapestOrder) return Math.min(cheapestDispenser, cheapestOrder);
+  return null;
+};
+type CheapestPriceParams = {
+  cheapestDispenser: number | undefined;
+  cheapestOrder: number | undefined;
+};
 type Props = {
-  apes: (Ape & { cheapestDispenser: number | null })[];
+  apes: (Ape & { cheapestPrice: number | null })[];
 };
 
 export default SeriesPage;

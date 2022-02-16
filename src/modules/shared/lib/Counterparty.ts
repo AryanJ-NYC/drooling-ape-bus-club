@@ -54,4 +54,20 @@ export class Counterparty extends CounterpartyClient {
       return [];
     }
   }
+
+  async getordersByAssetNames(assetNames: string[]) {
+    try {
+      return this.getOrders({
+        filters: [
+          { field: 'give_asset', op: 'IN', value: assetNames },
+          { field: 'give_remaining', op: '>=', value: 1 },
+        ],
+        order_by: 'block_index',
+        order_dir: 'desc',
+        status: 'open',
+      });
+    } catch {
+      return [];
+    }
+  }
 }
