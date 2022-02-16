@@ -1,30 +1,25 @@
+import { satoshisToBitcoin } from 'bitcoin-conversion';
 import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { ApeCard } from '../../modules/shared/components/ApeCard';
 import { ApeGrid } from '../../modules/shared/components/ApeGrid';
-import { PageLayout } from '../../modules/shared/components/PageLayout';
+import { Counterparty } from '../../modules/shared/lib/Counterparty';
 import { SanityClient } from '../../sanity/client';
 import type { Ape } from '../../sanity/types';
 
 const SeriesPage: NextPage<Props> = ({ apes }) => {
   const router = useRouter();
   if (router.isFallback) {
-    return (
-      <PageLayout>
-        <p>Under Contstruction</p>
-      </PageLayout>
-    );
+    return <p>Under Contstruction</p>;
   }
 
   return (
-    <PageLayout>
-      <ApeGrid>
-        {apes.map((a, i) => (
-          <ApeCard ape={a} key={a.name} order={i + 1} />
-        ))}
-      </ApeGrid>
-    </PageLayout>
+    <ApeGrid>
+      {apes.map((a, i) => (
+        <ApeCard ape={a} key={a.name} order={i + 1} />
+      ))}
+    </ApeGrid>
   );
 };
 
@@ -40,8 +35,33 @@ export const getStaticProps: GetStaticProps<Props, { number: string }> = async (
     return { notFound: true };
   }
 
-  return { props: { apes }, revalidate: 60 * 5 };
+  const cp = new Counterparty();
+  const apeNames = apes.map((a) => a.name);
+  const dispensers = await cp.getDispensersByAssetNames(apeNames);
+  const apeNameToCheapestDispenserPrice = dispensers.reduce((prev, dispenser) => {
+    if (!prev[dispenser.asset]) {
+      return { ...prev, [dispenser.asset]: satoshisToBitcoin(dispenser.satoshirate) };
+    }
+
+    const currentValue = prev[dispenser.asset];
+    return {
+      ...prev,
+      [dispenser.asset]: Math.min(currentValue ?? 0, satoshisToBitcoin(dispenser.satoshirate)),
+    };
+  }, {} as Record<string, number | undefined>);
+
+  return {
+    props: {
+      apes: apes.map((a) => ({
+        ...a,
+        cheapestDispenser: apeNameToCheapestDispenserPrice[a.name] ?? null,
+      })),
+    },
+    revalidate: 60 * 5,
+  };
 };
-type Props = { apes: Ape[] };
+type Props = {
+  apes: (Ape & { cheapestDispenser: number | null })[];
+};
 
 export default SeriesPage;

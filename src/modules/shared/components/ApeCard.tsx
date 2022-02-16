@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React from 'react';
 import { SanityClient } from '../../../sanity/client';
 import type { Ape } from '../../../sanity/types';
@@ -12,18 +13,18 @@ export const ApeCard: React.FC<Props> = ({ ape, order }) => {
       .width(255)
       .quality(67)
       .url() ?? undefined;
-  const xchainUrl = `https://xchain.io/asset/${ape.name}`;
+  const url = `/ape/${ape.name}`;
   return (
     <ApeCardContainer>
-      <MaybeAnchor href={xchainUrl}>
-        <img
-          alt={`${ape.name ?? 'unnamed'} asset`}
-          className="bg-pink-50 rounded-t-md"
-          height="255"
-          width="255"
-          src={imageUrl}
-        />
-      </MaybeAnchor>
+      <Link href={url}>
+        <a>
+          <img
+            alt={`${ape.name ?? 'unnamed'} asset`}
+            className="bg-pink-50 rounded-t-md w-96 md:w-80"
+            src={imageUrl}
+          />
+        </a>
+      </Link>
       <ApeCardCaptionContainer>
         {ape.name ? <p className="tracking-wider">{ape.name}</p> : null}
         <p className="text-xs">Card {order}</p>
@@ -43,6 +44,11 @@ export const ApeCard: React.FC<Props> = ({ ape, order }) => {
             ))}
           </p>
         ) : null}
+        {ape.cheapestDispenser ? (
+          <p className="text-sm">
+            {ape.cheapestDispenser.toLocaleString(undefined, { maximumFractionDigits: 8 })} BTC
+          </p>
+        ) : null}
       </ApeCardCaptionContainer>
     </ApeCardContainer>
   );
@@ -55,19 +61,9 @@ export const ApeCardContainer: React.FC = ({ children }) => (
 );
 
 export const ApeCardCaptionContainer: React.FC = ({ children }) => (
-  <div className="bg-pink-50 py-2 rounded-b-md flex flex-col items-center">{children}</div>
+  <div className="bg-pink-50 py-2 rounded-b-md flex flex-col items-center space-y-0.5">
+    {children}
+  </div>
 );
 
-const MaybeAnchor: React.FC<{
-  className?: string;
-  href?: string;
-}> &
-  React.DetailedHTMLProps<
-    React.HTMLAttributes<HTMLDivElement | HTMLAnchorElement>,
-    HTMLDivElement | HTMLAnchorElement
-  > = ({ href, ...props }) => {
-  if (href) return <a href={href} {...props} target="_blank" rel="noopener noreferrer" />;
-  return <div {...props} />;
-};
-
-type Props = { ape: Ape; order: number };
+type Props = { ape: Ape & { cheapestDispenser: number | null }; order: number };

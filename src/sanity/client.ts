@@ -17,6 +17,18 @@ export class SanityClient extends Sanity {
     this.builder = imageUrlBuilder(projectDetails);
   }
 
+  async getApeByName(assetName: string) {
+    const query = /* groq */ `*[_type == 'ape' && name == $name] {
+      ...,
+      artists[] -> {
+        name,
+        webpage
+      },
+    }[0]`;
+    const ape: Ape = await this.fetch(query, { name: assetName });
+    return ape;
+  }
+
   async getApes() {
     const apesQuery = /* groq */ `*[_type == 'ape'] | order(order asc) {
       ...,

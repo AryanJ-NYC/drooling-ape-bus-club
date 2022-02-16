@@ -3,45 +3,42 @@ import type { GetStaticProps, NextPage } from 'next';
 import Link from 'next/link';
 import { ApeCardCaptionContainer, ApeCardContainer } from '../modules/shared/components/ApeCard';
 import { ApeGrid } from '../modules/shared/components/ApeGrid';
-import { PageLayout } from '../modules/shared/components/PageLayout';
 import { SanityClient } from '../sanity/client';
 import type { Ape } from '../sanity/types';
 
 const sanityClient = new SanityClient();
 const Home: NextPage<Props> = ({ seriesToApe }) => {
   return (
-    <PageLayout>
-      <ApeGrid>
-        {Object.entries(seriesToApe).map(([seriesNumber, ape]) => {
-          const imageUrl =
-            sanityClient
-              .urlForImageSource(ape.image)
-              .auto('format')
-              .height(255)
-              .width(255)
-              .quality(67)
-              .url() ?? undefined;
-          return (
-            <Link key={seriesNumber} href={`/series/${seriesNumber}`}>
-              <a>
-                <ApeCardContainer>
-                  <img
-                    alt={`${ape.name ?? 'unnamed'} asset`}
-                    className="bg-pink-50 rounded-t-md"
-                    height="255"
-                    width="255"
-                    src={imageUrl}
-                  />
-                  <ApeCardCaptionContainer>
-                    <p className="tracking-widest uppercase">Series {seriesNumber}</p>
-                  </ApeCardCaptionContainer>
-                </ApeCardContainer>
-              </a>
-            </Link>
-          );
-        })}
-      </ApeGrid>
-    </PageLayout>
+    <ApeGrid>
+      {Object.entries(seriesToApe).map(([seriesNumber, ape]) => {
+        const imageUrl =
+          sanityClient
+            .urlForImageSource(ape.image)
+            .auto('format')
+            .height(255)
+            .width(255)
+            .quality(67)
+            .url() ?? undefined;
+        return (
+          <Link key={seriesNumber} href={`/series/${seriesNumber}`}>
+            <a>
+              <ApeCardContainer>
+                <img
+                  alt={`${ape.name ?? 'unnamed'} asset`}
+                  className="bg-pink-50 rounded-t-md"
+                  height="255"
+                  width="255"
+                  src={imageUrl}
+                />
+                <ApeCardCaptionContainer>
+                  <p className="tracking-widest uppercase">Series {seriesNumber}</p>
+                </ApeCardCaptionContainer>
+              </ApeCardContainer>
+            </a>
+          </Link>
+        );
+      })}
+    </ApeGrid>
   );
 };
 

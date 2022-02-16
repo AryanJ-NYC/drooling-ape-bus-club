@@ -1,50 +1,46 @@
 import clsx from 'clsx';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { toast, Toaster } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import { FaSpinner } from 'react-icons/fa';
-import { PageLayout } from '../modules/shared/components/PageLayout';
 
 const Submit = () => {
   return (
-    <PageLayout>
-      <div className="max-w-lg space-y-6">
-        <div className="space-y-4">
-          <p className="text-lg tracking-wider uppercase">Submission Rules</p>
-          <ol className="list-decimal list-inside space-y-1">
-            <li>
-              Do not share your image with anyone until approved or denied. This is for your
-              protection.
-            </li>
-            <li>Submission must be 1080x1080</li>
-            <li>5MB cutoff for GIFs; 1MB pixels cutoff for PNGs, JPGs, etc.</li>
-            <li>Token must not be divisible</li>
-            <li>Token must be locked</li>
-            <li>Do not send token until approved for series</li>
-            <li>Issuance must be a minimum of 69</li>
-            <li>Only 1 submission per artist until approved or denied</li>
-            <li>
-              If you just take an existing Bored Ape and add a hat or some drool, that&apos;s not
-              really what we&apos;re looking for. While Drooling Apes can resemble Bored Apes, the
-              drawing should be original, not just a copy of a Bored Ape.
-            </li>
-          </ol>
-          <div className="space-y-2">
-            <p>
-              There is a 5MB upload limit to what the server can handle. If your file is bigger than
-              that, it&apos;ll fail.
-            </p>
-            <p>
-              That is not to say your asset can&apos;t be greater than 5MB. It can be whatever
-              you&apos;d like on xchain. Simply upload a smaller GIF or a static image
-              representation of your GIF.
-            </p>
-          </div>
+    <div className="max-w-lg space-y-6">
+      <div className="space-y-4">
+        <p className="text-lg tracking-wider uppercase">Submission Rules</p>
+        <ol className="list-decimal list-inside space-y-1">
+          <li>
+            Do not share your image with anyone until approved or denied. This is for your
+            protection.
+          </li>
+          <li>Submission must be 1080x1080</li>
+          <li>5MB cutoff for GIFs; 1MB pixels cutoff for PNGs, JPGs, etc.</li>
+          <li>Token must not be divisible</li>
+          <li>Token must be locked</li>
+          <li>Do not send token until approved for series</li>
+          <li>Issuance must be a minimum of 69</li>
+          <li>Only 1 submission per artist until approved or denied</li>
+          <li>
+            If you just take an existing Bored Ape and add a hat or some drool, that&apos;s not
+            really what we&apos;re looking for. While Drooling Apes can resemble Bored Apes, the
+            drawing should be original, not just a copy of a Bored Ape.
+          </li>
+        </ol>
+        <div className="space-y-2">
+          <p>
+            There is a 5MB upload limit to what the server can handle. If your file is bigger than
+            that, it&apos;ll fail.
+          </p>
+          <p>
+            That is not to say your asset can&apos;t be greater than 5MB. It can be whatever
+            you&apos;d like on xchain. Simply upload a smaller GIF or a static image representation
+            of your GIF.
+          </p>
         </div>
-        <SubmissionForm />
       </div>
-      <Toaster />
-    </PageLayout>
+      <SubmissionForm />
+    </div>
   );
 };
 
