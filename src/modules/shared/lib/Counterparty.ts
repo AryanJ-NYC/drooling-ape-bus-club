@@ -5,7 +5,7 @@ export class Counterparty extends CounterpartyClient {
     super('http://api.counterparty.io:4000/api/', 'rpc', 'rpc');
   }
 
-  getDispensersByAssetName(assetName: string) {
+  async getDispensersByAssetName(assetName: string) {
     try {
       return this.getDispensers({
         filters: [
@@ -33,6 +33,22 @@ export class Counterparty extends CounterpartyClient {
         order_by: 'satoshirate',
         order_dir: 'asc',
         status: 0,
+      });
+    } catch {
+      return [];
+    }
+  }
+
+  async getOrdersByAssetName(assetName: string) {
+    try {
+      return this.getOrders({
+        filters: [
+          { field: 'give_asset', op: '==', value: assetName },
+          { field: 'give_remaining', op: '>=', value: 1 },
+        ],
+        order_by: 'block_index',
+        order_dir: 'desc',
+        status: 'open',
       });
     } catch {
       return [];

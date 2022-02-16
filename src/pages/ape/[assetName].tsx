@@ -1,14 +1,15 @@
-import { Dispenser as DispenserType } from 'counterparty-node-client/dist/types/Dispenser';
+import type { Dispenser as DispenserType, Order as OrderType } from 'counterparty-node-client';
 import type { GetServerSideProps, NextPage } from 'next';
 import React from 'react';
 import { Dispenser } from '../../modules/shared/components/Dispenser';
+import { Order } from '../../modules/shared/components/Order';
 import { Counterparty } from '../../modules/shared/lib/Counterparty';
 import { SanityClient } from '../../sanity/client';
 import { Ape } from '../../sanity/types';
 
 const sanity = new SanityClient();
 
-const AssetDetailScreen: NextPage<Props> = ({ ape, dispensers }) => {
+const AssetDetailScreen: NextPage<Props> = ({ ape, dispensers, orders }) => {
   const imageUrl = sanity.urlForImageSource(ape.image).height(555).toString();
   return (
     <div className="flex flex-col lg:flex-row space-y-4 lg:space-x-8 lg:space-y-0">
@@ -33,20 +34,32 @@ const AssetDetailScreen: NextPage<Props> = ({ ape, dispensers }) => {
             ))}
           </p>
         </div>
-        <div>
-          <p className="text-lg">Dispensers</p>
-          <div className="space-y-4">
-            {dispensers.map((d) => (
-              <Dispenser dispenser={d} key={d.tx_hash} />
-            ))}
+        {!!dispensers.length && (
+          <div>
+            <p className="text-lg">Dispensers</p>
+            <div className="space-y-4">
+              {dispensers.map((d) => (
+                <Dispenser dispenser={d} key={d.tx_hash} />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
+        {!!orders.length && (
+          <div>
+            <p className="text-lg">Open Orders</p>
+            <div className="space-y-4">
+              {orders.map((o) => (
+                <Order order={o} key={o.tx_hash} />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-type Props = { ape: Ape; dispensers: DispenserType[] };
+type Props = { ape: Ape; dispensers: DispenserType[]; orders: OrderType[] };
 // TODO: change to get static props
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   if (typeof params?.assetName !== 'string') {
@@ -57,8 +70,11 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   if (!ape) return { notFound: true };
 
   const counterparty = new Counterparty();
-  const dispensers = await counterparty.getDispensersByAssetName(params.assetName);
-  return { props: { ape, dispensers } };
+  const [dispensers, orders] = await Promise.all([
+    counterparty.getDispensersByAssetName(params.assetName),
+    counterparty.getOrdersByAssetName(params.assetName),
+  ]);
+  return { props: { ape, dispensers, orders } };
 };
 
 export default AssetDetailScreen;
