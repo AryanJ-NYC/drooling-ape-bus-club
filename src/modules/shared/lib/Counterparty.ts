@@ -5,6 +5,24 @@ export class Counterparty extends CounterpartyClient {
     super('http://api.counterparty.io:4000/api/', 'rpc', 'rpc');
   }
 
+  async getDispenserByTxIndex(txIndex: number): Promise<Dispenser | undefined> {
+    try {
+      const [dispenser] = await this.getDispensers({
+        filters: [
+          { field: 'tx_index', op: '==', value: txIndex },
+          { field: 'give_remaining', op: '>=', value: 1 },
+          { field: 'give_quantity', op: '>=', value: 1 },
+        ],
+        order_by: 'satoshirate',
+        order_dir: 'asc',
+        status: 0,
+      });
+      return dispenser;
+    } catch {
+      return undefined;
+    }
+  }
+
   async getDispensersByAssetName(assetName: string) {
     try {
       return this.getDispensers({

@@ -3991,10 +3991,10 @@ cosmiconfig@^7, cosmiconfig@^7.0.0, cosmiconfig@^7.0.1:
     path-type "^4.0.0"
     yaml "^1.10.0"
 
-counterparty-node-client@^0.4.2:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/counterparty-node-client/-/counterparty-node-client-0.4.2.tgz#6a94475b51ee3fbb26a5e9619fb4425f0ea7f21c"
-  integrity sha512-bwYjpRB0g43JoAJIsg2UDlcnoClUnrzouKvIukPsJWRsv5+Xwra1VjBBVzgzg+AK46ssDwu+uQIPpUjdwjj78Q==
+counterparty-node-client@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/counterparty-node-client/-/counterparty-node-client-0.6.0.tgz#91d69178bcc31c623ca6ed42f7a8b1183ab02a7e"
+  integrity sha512-2aA6g9YcgBokQ8VJnFbiycEeadSHNi5QEECqz5Q8Rd/Lm6NyvIr1BySx2f4UgVeyL4rtENx+w9YCx8tMkq47NQ==
   dependencies:
     cross-fetch "^3.1.5"
 
@@ -11272,6 +11272,11 @@ svgo@^1.0.0:
     stable "^0.1.8"
     unquote "~1.1.1"
     util.promisify "~1.0.0"
+
+swr@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/swr/-/swr-1.2.2.tgz#6cae09928d30593a7980d80f85823e57468fac5d"
+  integrity sha512-ky0BskS/V47GpW8d6RU7CPsr6J8cr7mQD6+do5eky3bM0IyJaoi3vO8UhvrzJaObuTlGhPl2szodeB2dUd76Xw==
 
 symbol-observable@^1.2.0:
   version "1.2.0"

@@ -10,16 +10,16 @@ import { Ape } from '../../sanity/types';
 const sanity = new SanityClient();
 
 const AssetDetailScreen: NextPage<Props> = ({ ape, dispensers, orders }) => {
-  const imageUrl = sanity.urlForImageSource(ape.image).height(555).toString();
+  const imageUrl = sanity.urlForImageSource(ape.image).height(600).toString();
   return (
     <div className="flex flex-col lg:flex-row space-y-4 lg:space-x-8 lg:space-y-0">
       <div>
         <img src={imageUrl} />
       </div>
       <div className="flex flex-1 flex-col space-y-8">
-        <div>
-          <p className="text-xl text-center">{ape.name}</p>
-          <p className="text-center">
+        <div className="flex-1 text-center leading-5">
+          <p className="text-xl">{ape.name}</p>
+          <p>
             by{' '}
             {ape.artists.map((artist) => (
               <a
@@ -33,48 +33,62 @@ const AssetDetailScreen: NextPage<Props> = ({ ape, dispensers, orders }) => {
               </a>
             ))}
           </p>
+          <p>{ape.supply} Issued</p>
         </div>
-        {!!dispensers.length && (
-          <div>
-            <p className="text-lg">Dispensers</p>
-            <div className="space-y-4">
-              {dispensers.map((d) => (
-                <Dispenser dispenser={d} key={d.tx_hash} />
-              ))}
+        <div className="flex-1">
+          {!!dispensers.length && (
+            <div>
+              <p className="text-lg">Dispensers</p>
+              <div className="space-y-4">
+                {dispensers.map((d) => (
+                  <Dispenser dispenser={d} key={d.tx_hash} />
+                ))}
+              </div>
             </div>
-          </div>
-        )}
-        {!!orders.length && (
-          <div>
-            <p className="text-lg">Open Orders</p>
-            <div className="space-y-4">
-              {orders.map((o) => (
-                <Order order={o} key={o.tx_hash} />
-              ))}
+          )}
+          {!!orders.length && (
+            <div>
+              <p className="text-lg">Open Orders</p>
+              <div className="space-y-4">
+                {orders.map((o) => (
+                  <Order order={o} key={o.tx_hash} />
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
 };
 
-type Props = { ape: Ape; dispensers: DispenserType[]; orders: OrderType[] };
+type Props = {
+  ape: Ape & {
+    divisible: boolean;
+    supply: number;
+    description: string;
+  };
+  dispensers: DispenserType[];
+  orders: OrderType[];
+};
 // TODO: change to get static props
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   if (typeof params?.assetName !== 'string') {
     return { notFound: true };
   }
 
-  const ape = await sanity.getApeByName(params.assetName);
+  const counterparty = new Counterparty();
+  const [ape, [assetInfo]] = await Promise.all([
+    sanity.getApeByName(params.assetName),
+    counterparty.getAssetInfo([params.assetName]),
+  ]);
   if (!ape) return { notFound: true };
 
-  const counterparty = new Counterparty();
   const [dispensers, orders] = await Promise.all([
     counterparty.getDispensersByAssetName(params.assetName),
     counterparty.getOrdersByAssetName(params.assetName),
   ]);
-  return { props: { ape, dispensers, orders } };
+  return { props: { ape: { ...ape, ...assetInfo }, dispensers, orders } };
 };
 
 export default AssetDetailScreen;

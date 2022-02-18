@@ -25,7 +25,7 @@ const Home: NextPage<Props> = ({ seriesToApe }) => {
               <ApeCardContainer>
                 <img
                   alt={`${ape.name ?? 'unnamed'} asset`}
-                  className="bg-pink-50 rounded-t-md"
+                  className="bg-pink-50 rounded-t-md w-96 md:w-80"
                   height="255"
                   width="255"
                   src={imageUrl}
