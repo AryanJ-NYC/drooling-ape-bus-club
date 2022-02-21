@@ -9,6 +9,11 @@ const ape = {
       type: 'image',
       options: { hotspot: true },
     },
+    {
+      title: 'Image URL',
+      name: 'imageUrl',
+      type: 'string',
+    },
     { title: 'Name', name: 'name', type: 'string' },
     {
       title: 'Artists',

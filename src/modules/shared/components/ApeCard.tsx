@@ -1,30 +1,34 @@
 import Link from 'next/link';
 import React from 'react';
+// @ts-expect-error
+import { Player } from 'video-react';
 import { SanityClient } from '../../../sanity/client';
 import type { Ape } from '../../../sanity/types';
+import '../../../../node_modules/video-react/dist/video-react.css';
 
 const sanityClient = new SanityClient();
 export const ApeCard: React.FC<Props> = ({ ape, order }) => {
   const imageUrl =
-    sanityClient
-      .urlForImageSource(ape.image)
-      .auto('format')
-      .height(255)
-      .width(255)
-      .quality(67)
-      .url() ?? undefined;
+    ape.imageUrl ??
+    sanityClient.urlForImageSource(ape.image).auto('format').height(255).width(255).url() ??
+    undefined;
   const url = `/ape/${ape.name}`;
   return (
     <ApeCardContainer>
-      <Link href={url}>
-        <a>
-          <img
-            alt={`${ape.name ?? 'unnamed'} asset`}
-            className="bg-pink-50 rounded-t-md w-96 md:w-80"
-            src={imageUrl}
-          />
-        </a>
-      </Link>
+      {imageUrl.includes('.mp4') ? (
+        <Player fluid={false} height={320} playsInline src={imageUrl} width={320} />
+      ) : (
+        <Link href={url}>
+          <a>
+            <img
+              alt={`${ape.name ?? 'unnamed'} asset`}
+              className="bg-pink-50 rounded-t-md w-96 md:w-80"
+              src={imageUrl}
+            />
+          </a>
+        </Link>
+      )}
+
       <ApeCardCaptionContainer>
         {ape.name ? <p className="tracking-wider">{ape.name}</p> : null}
         <p className="text-xs">Card {order}</p>
