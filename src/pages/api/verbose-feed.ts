@@ -10,7 +10,7 @@ const handler: NextApiHandler = async (_, res) => {
       [asset.name]: {
         artists: asset.artists,
         asset: asset.name,
-        img_url: sanity.urlForImageSource(asset.image).url(),
+        img_url: asset.imageUrl ?? sanity.urlForImageSource(asset.image).url(),
         order: (i % 69) + 1,
         series: asset.series,
       },
