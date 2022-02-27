@@ -26,8 +26,9 @@ const SeriesPage: NextPage<Props> = ({ apes }) => {
   );
 };
 
-export const getStaticPaths: GetStaticPaths = () => {
-  return { fallback: true, paths: [] };
+export const getStaticPaths: GetStaticPaths = async () => {
+  const serieses = await sanity.getAllApesGroupedBySeries();
+  return { fallback: true, paths: serieses.map((_, i) => ({ params: { number: `${i + 1}` } })) };
 };
 
 const sanity = new SanityClient();
@@ -92,9 +93,7 @@ export const getStaticProps: GetStaticProps<Props, { number: string }> = async (
     })
   );
   return {
-    props: {
-      apes: apesWithCheapestPrice,
-    },
+    props: { apes: apesWithCheapestPrice },
     revalidate: 60 * 5,
   };
 };
