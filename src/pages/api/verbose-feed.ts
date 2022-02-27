@@ -23,7 +23,6 @@ const handler: NextApiHandler = async (_, res) => {
 
 const getImageUrl = (asset: Ape): string => {
   if (asset.imageUrl) return asset.imageUrl;
-  if (asset.image) return sanity.urlForImageSource(asset.image).url();
   return '';
 };
 

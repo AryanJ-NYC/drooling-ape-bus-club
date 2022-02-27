@@ -4,12 +4,6 @@ const ape = {
   type: 'document',
   fields: [
     {
-      title: 'Image',
-      name: 'image',
-      type: 'image',
-      options: { hotspot: true },
-    },
-    {
       title: 'Image URL',
       name: 'imageUrl',
       type: 'string',

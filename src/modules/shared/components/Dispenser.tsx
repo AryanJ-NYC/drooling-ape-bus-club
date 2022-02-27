@@ -13,7 +13,6 @@ export const Dispenser: React.FC<{ dispenser: DispenserType }> = ({
   dispenser: initialDispenser,
 }) => {
   const clipboard = useClipboard();
-  console.log({ initialDispenser });
   const { data: dispensesPending } = useSWR(
     [initialDispenser.source, 'mempool'],
     async (source) => {

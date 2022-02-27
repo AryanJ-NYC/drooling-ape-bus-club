@@ -1,13 +1,10 @@
-import Head from 'next/head';
 import React from 'react';
 import { FaTelegramPlane, FaTwitter } from 'react-icons/fa';
-import squareLogo from '../../../../../public/logo_square.png';
 import { Header } from './Header';
 
 export const PageLayout: React.FC = ({ children }) => {
   return (
     <div>
-      <SEO />
       <div className="flex flex-col min-h-screen">
         <Header />
         <main className="flex-1 bg-gray-50 px-8 md:px-16 py-8">{children}</main>
@@ -31,29 +28,5 @@ export const PageLayout: React.FC = ({ children }) => {
         </footer>
       </div>
     </div>
-  );
-};
-
-const description = 'Because the other apes are boring.';
-const cardImageSrc = 'https://drooling-ape-bus-club.s3.amazonaws.com/DERPYMONA.jpg';
-const title = 'Drooling Ape Bus Club';
-const SEO: React.FC = () => {
-  return (
-    <Head>
-      <link rel="shortcut icon" href={squareLogo.src} type="image/x-icon" />
-      <title>{title}</title>
-      <meta name="description" content={description} />
-      <meta name="image" content={cardImageSrc} />
-
-      <meta name="twitter:card" content="summary" />
-      <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={cardImageSrc} />
-      <meta name="twitter:creator" content="@AryanJabbari" />
-      <meta name="twitter:title" content={title} />
-
-      <meta name="og:image" content={cardImageSrc} />
-      <meta name="og:type" content="website" />
-      <meta name="og:title" content={title} />
-    </Head>
   );
 };
