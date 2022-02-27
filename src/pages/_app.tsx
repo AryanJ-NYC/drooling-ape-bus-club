@@ -30,7 +30,7 @@ const MyApp: AppComponent = ({ Component, pageProps }) => {
         }}
         twitter={{
           handle: '@DroolingApes',
-          cardType: 'summary',
+          cardType: 'summary_large_image',
           site: url,
         }}
       />
