@@ -1,21 +1,29 @@
 import type { Dispenser as DispenserType, Order as OrderType } from 'counterparty-node-client';
 import type { GetServerSideProps, NextPage } from 'next';
+import Image from 'next/image';
+import { getPlaiceholder } from 'plaiceholder';
 import React from 'react';
 import { Dispenser } from '../../modules/shared/components/Dispenser';
 import { Order } from '../../modules/shared/components/Order';
 import { VideoPlayer } from '../../modules/shared/components/VideoPlayer';
 import { Counterparty } from '../../modules/shared/lib/Counterparty';
+import { ImagePlaciceholderProps } from '../../modules/types';
 import { SanityClient } from '../../sanity/client';
 import { Ape } from '../../sanity/types';
 
 const sanity = new SanityClient();
 
 const AssetDetailScreen: NextPage<Props> = ({ ape, dispensers, orders }) => {
-  const imageUrl = ape.imageUrl ?? sanity.urlForImageSource(ape.image).height(600).toString();
+  const imageUrl = ape.imageUrl;
   return (
     <div className="flex flex-col lg:flex-row space-y-4 lg:space-x-8 lg:space-y-0">
       <div className="flex-1">
-        {imageUrl.includes('.mp4') ? <VideoPlayer src={imageUrl} /> : <img src={imageUrl} />}
+        {imageUrl.includes('.mp4') ? (
+          <VideoPlayer src={imageUrl} />
+        ) : (
+          // @ts-expect-error
+          <Image alt={`${ape.name}`} {...ape.imageProps} placeholder="blur" />
+        )}
       </div>
       <div className="flex flex-1 flex-col space-y-8">
         <div className="flex-1 text-center leading-5">
@@ -66,6 +74,7 @@ const AssetDetailScreen: NextPage<Props> = ({ ape, dispensers, orders }) => {
 type Props = {
   ape: Ape & {
     divisible: boolean;
+    imageProps: ImagePlaciceholderProps;
     supply: number;
     description: string;
   };
@@ -85,11 +94,18 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   ]);
   if (!ape) return { notFound: true };
 
-  const [dispensers, orders] = await Promise.all([
+  const [dispensers, orders, { img, base64: blurDataURL }] = await Promise.all([
     counterparty.getDispensersByAssetName(params.assetName),
     counterparty.getOrdersByAssetName(params.assetName),
+    getPlaiceholder(ape.imageUrl),
   ]);
-  return { props: { ape: { ...ape, ...assetInfo }, dispensers, orders } };
+  return {
+    props: {
+      ape: { ...ape, ...assetInfo, imageProps: { ...img, blurDataURL } },
+      dispensers,
+      orders,
+    },
+  };
 };
 
 export default AssetDetailScreen;

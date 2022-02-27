@@ -1,16 +1,12 @@
 import Link from 'next/link';
 import React from 'react';
-import { SanityClient } from '../../../sanity/client';
 import type { Ape } from '../../../sanity/types';
+import { ImagePlaciceholderProps } from '../../types';
 import { ApeImage } from './ApeImage';
 import { VideoPlayer } from './VideoPlayer';
 
-const sanityClient = new SanityClient();
 export const ApeCard: React.FC<Props> = ({ ape, order }) => {
-  const imageUrl =
-    ape.imageUrl ??
-    sanityClient.urlForImageSource(ape.image).auto('format').height(255).width(255).url() ??
-    undefined;
+  const imageUrl = ape.imageUrl;
   const url = `/ape/${ape.name}`;
   return (
     <ApeCardContainer>
@@ -19,7 +15,8 @@ export const ApeCard: React.FC<Props> = ({ ape, order }) => {
       ) : (
         <Link href={url}>
           <a>
-            <ApeImage alt={`${ape.name ?? 'unnamed'} asset`} src={imageUrl} />
+            {/* @ts-expect-error */}
+            <ApeImage alt={`${ape.name ?? 'unnamed'} asset`} {...ape.imageProps} />
           </a>
         </Link>
       )}
@@ -69,4 +66,7 @@ export const ApeCardCaptionContainer: React.FC = ({ children }) => (
   </div>
 );
 
-type Props = { ape: Ape & { cheapestPrice: number | null }; order: number };
+type Props = {
+  ape: Ape & { cheapestPrice: number | null; imageProps: ImagePlaciceholderProps };
+  order: number;
+};

@@ -2,10 +2,12 @@ import { getXcpBtcRate, satoshisToBitcoin } from 'bitcoin-conversion';
 import Decimal from 'decimal.js-light';
 import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
+import { getPlaiceholder } from 'plaiceholder';
 import React from 'react';
 import { ApeCard } from '../../modules/shared/components/ApeCard';
 import { ApeGrid } from '../../modules/shared/components/ApeGrid';
 import { Counterparty } from '../../modules/shared/lib/Counterparty';
+import { ImagePlaciceholderProps } from '../../modules/types';
 import { SanityClient } from '../../sanity/client';
 import type { Ape } from '../../sanity/types';
 
@@ -76,16 +78,24 @@ export const getStaticProps: GetStaticProps<Props, { number: string }> = async (
       };
     }, {} as Record<string, number>);
 
+  const apesWithCheapestPrice = await Promise.all(
+    apes.map(async (a) => {
+      const cheapestDispenser = apeNameToCheapestDispenserPrice[a.name];
+      const cheapestOrder = apeNameToCheapestOrderPrice[a.name];
+      const { img, base64: blurDataURL } = a.imageUrl.endsWith('.mp4')
+        ? { img: { src: a.imageUrl }, base64: null }
+        : await getPlaiceholder(a.imageUrl);
+
+      return {
+        ...a,
+        imageProps: { ...img, blurDataURL },
+        cheapestPrice: calculateCheapestPrice({ cheapestDispenser, cheapestOrder }),
+      };
+    })
+  );
   return {
     props: {
-      apes: apes.map((a) => {
-        const cheapestDispenser = apeNameToCheapestDispenserPrice[a.name];
-        const cheapestOrder = apeNameToCheapestOrderPrice[a.name];
-        return {
-          ...a,
-          cheapestPrice: calculateCheapestPrice({ cheapestDispenser, cheapestOrder }),
-        };
-      }),
+      apes: apesWithCheapestPrice,
     },
     revalidate: 60 * 5,
   };
@@ -102,7 +112,7 @@ type CheapestPriceParams = {
   cheapestOrder: number | undefined;
 };
 type Props = {
-  apes: (Ape & { cheapestPrice: number | null })[];
+  apes: (Ape & { cheapestPrice: number | null; imageProps: ImagePlaciceholderProps })[];
 };
 
 export default SeriesPage;

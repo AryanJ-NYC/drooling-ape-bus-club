@@ -46,9 +46,9 @@ export class SanityClient extends Sanity {
 
   async getAllApesGroupedBySeries() {
     const query = /* groq */ `*[_type == 'series'] | order(series asc) {
-      apes[] -> { image, imageUrl }
+      apes[] -> { imageUrl }
     }`;
-    const apes: { apes: [{ image: Ape['image'] }] }[] = await this.fetch(query);
+    const apes: { apes: [{ imageUrl: Ape['imageUrl'] }] }[] = await this.fetch(query);
     return apes;
   }
 

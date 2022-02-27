@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 // eslint-disable-next-line
 const Yup = require('yup');
+// eslint-disable-next-line
+const { withPlaiceholder } = require('@plaiceholder/next');
 
 const envVariablesValidationSchema = Yup.object({
   telegramSubmissionChannelApiKey: Yup.string().required(),
@@ -11,10 +13,20 @@ envVariablesValidationSchema.validateSync({
   telegramSubmissionChannelId: process.env.TELEGRAM_SUBMISSION_CHANNEL_ID,
 });
 
-module.exports = {
+module.exports = withPlaiceholder({
   i18n: {
     locales: ['en'],
     defaultLocale: 'en',
   },
+  images: {
+    domains: [
+      'arweave.net',
+      'hosting.photobucket.com',
+      'media.istockphoto.com',
+      'imgur.com',
+      'i.imgur.com',
+      'xchain.io',
+    ],
+  },
   reactStrictMode: true,
-};
+});
