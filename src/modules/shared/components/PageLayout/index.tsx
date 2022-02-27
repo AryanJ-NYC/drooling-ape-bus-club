@@ -10,7 +10,7 @@ export const PageLayout: React.FC = ({ children }) => {
       <SEO />
       <div className="flex flex-col min-h-screen">
         <Header />
-        <main className="flex-1 bg-gray-50 px-16 py-8">{children}</main>
+        <main className="flex-1 bg-gray-50 px-8 md:px-16 py-8">{children}</main>
         <footer className="bg-purple-50 px-8 md:px-24 py-4 flex justify-center space-x-6">
           <a
             className="text-purple-400 hover:text-purple-500 cursor-pointer"

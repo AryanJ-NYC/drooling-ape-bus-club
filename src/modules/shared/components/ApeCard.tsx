@@ -1,10 +1,9 @@
 import Link from 'next/link';
 import React from 'react';
-// @ts-expect-error
-import { Player } from 'video-react';
 import { SanityClient } from '../../../sanity/client';
 import type { Ape } from '../../../sanity/types';
-import '../../../../node_modules/video-react/dist/video-react.css';
+import { ApeImage } from './ApeImage';
+import { VideoPlayer } from './VideoPlayer';
 
 const sanityClient = new SanityClient();
 export const ApeCard: React.FC<Props> = ({ ape, order }) => {
@@ -16,21 +15,21 @@ export const ApeCard: React.FC<Props> = ({ ape, order }) => {
   return (
     <ApeCardContainer>
       {imageUrl.includes('.mp4') ? (
-        <Player fluid={false} height={320} playsInline src={imageUrl} width={320} />
+        <VideoPlayer src={imageUrl} />
       ) : (
         <Link href={url}>
           <a>
-            <img
-              alt={`${ape.name ?? 'unnamed'} asset`}
-              className="bg-pink-50 rounded-t-md w-96 md:w-80"
-              src={imageUrl}
-            />
+            <ApeImage alt={`${ape.name ?? 'unnamed'} asset`} src={imageUrl} />
           </a>
         </Link>
       )}
 
       <ApeCardCaptionContainer>
-        {ape.name ? <p className="tracking-wider">{ape.name}</p> : null}
+        {ape.name ? (
+          <Link href={url}>
+            <a className="text-blue-400 hover:text-blue-600 tracking-wider">{ape.name}</a>
+          </Link>
+        ) : null}
         <p className="text-xs">Card {order}</p>
         {ape.artists?.length ? (
           <p className="text-xs">
@@ -60,12 +59,12 @@ export const ApeCard: React.FC<Props> = ({ ape, order }) => {
 
 export const ApeCardContainer: React.FC = ({ children }) => (
   <div className="flex flex-col items-center">
-    <div className="shadow-xl">{children}</div>
+    <div className="flex flex-col h-full shadow-xl w-full">{children}</div>
   </div>
 );
 
 export const ApeCardCaptionContainer: React.FC = ({ children }) => (
-  <div className="bg-pink-50 py-2 rounded-b-md flex flex-col items-center space-y-0.5">
+  <div className="bg-pink-50 py-2 rounded-b-md flex flex-col grow items-center space-y-0.5">
     {children}
   </div>
 );

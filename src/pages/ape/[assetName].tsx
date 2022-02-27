@@ -1,25 +1,21 @@
 import type { Dispenser as DispenserType, Order as OrderType } from 'counterparty-node-client';
 import type { GetServerSideProps, NextPage } from 'next';
 import React from 'react';
-// @ts-expect-error
-import { Player } from 'video-react';
 import { Dispenser } from '../../modules/shared/components/Dispenser';
 import { Order } from '../../modules/shared/components/Order';
+import { VideoPlayer } from '../../modules/shared/components/VideoPlayer';
 import { Counterparty } from '../../modules/shared/lib/Counterparty';
 import { SanityClient } from '../../sanity/client';
 import { Ape } from '../../sanity/types';
+
 const sanity = new SanityClient();
 
 const AssetDetailScreen: NextPage<Props> = ({ ape, dispensers, orders }) => {
   const imageUrl = ape.imageUrl ?? sanity.urlForImageSource(ape.image).height(600).toString();
   return (
     <div className="flex flex-col lg:flex-row space-y-4 lg:space-x-8 lg:space-y-0">
-      <div>
-        {imageUrl.includes('.mp4') ? (
-          <Player fluid={false} height={750} playsInline src={imageUrl} width={750} />
-        ) : (
-          <img src={imageUrl} />
-        )}
+      <div className="flex-1">
+        {imageUrl.includes('.mp4') ? <VideoPlayer src={imageUrl} /> : <img src={imageUrl} />}
       </div>
       <div className="flex flex-1 flex-col space-y-8">
         <div className="flex-1 text-center leading-5">

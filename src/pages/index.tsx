@@ -1,10 +1,10 @@
 import sample from 'lodash/sample';
 import type { GetStaticProps, NextPage } from 'next';
 import Link from 'next/link';
-// @ts-expect-error
-import { Player } from 'video-react';
 import { ApeCardCaptionContainer, ApeCardContainer } from '../modules/shared/components/ApeCard';
 import { ApeGrid } from '../modules/shared/components/ApeGrid';
+import { ApeImage } from '../modules/shared/components/ApeImage';
+import { VideoPlayer } from '../modules/shared/components/VideoPlayer';
 import { SanityClient } from '../sanity/client';
 import type { Ape } from '../sanity/types';
 
@@ -18,26 +18,20 @@ const Home: NextPage<Props> = ({ seriesToApe }) => {
           sanityClient.urlForImageSource(ape.image).auto('format').height(255).width(255).url() ??
           undefined;
         return (
-          <Link key={seriesNumber} href={`/series/${seriesNumber}`}>
-            <a>
-              <ApeCardContainer>
+          <ApeCardContainer key={seriesNumber}>
+            <Link href={`/series/${seriesNumber}`}>
+              <a>
                 {imageUrl.includes('.mp4') ? (
-                  <Player fluid={false} height={320} playsInline src={imageUrl} width={320} />
+                  <VideoPlayer src={imageUrl} />
                 ) : (
-                  <img
-                    alt={`${ape.name ?? 'unnamed'} asset`}
-                    className="bg-pink-50 rounded-t-md w-96 md:w-80"
-                    height="255"
-                    width="255"
-                    src={imageUrl}
-                  />
+                  <ApeImage alt={`${ape.name ?? 'unnamed'} asset`} src={imageUrl} />
                 )}
                 <ApeCardCaptionContainer>
                   <p className="tracking-widest uppercase">Series {seriesNumber}</p>
                 </ApeCardCaptionContainer>
-              </ApeCardContainer>
-            </a>
-          </Link>
+              </a>
+            </Link>
+          </ApeCardContainer>
         );
       })}
     </ApeGrid>
