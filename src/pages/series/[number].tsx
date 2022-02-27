@@ -92,10 +92,7 @@ export const getStaticProps: GetStaticProps<Props, { number: string }> = async (
       };
     })
   );
-  return {
-    props: { apes: apesWithCheapestPrice },
-    revalidate: 60 * 5,
-  };
+  return { props: { apes: apesWithCheapestPrice } };
 };
 
 const calculateCheapestPrice = ({ cheapestDispenser, cheapestOrder }: CheapestPriceParams) => {

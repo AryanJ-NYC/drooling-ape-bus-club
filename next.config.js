@@ -31,5 +31,4 @@ module.exports = withPlaiceholder({
     ],
   },
   reactStrictMode: true,
-  staticPageGenerationTimeout: 120,
 });
