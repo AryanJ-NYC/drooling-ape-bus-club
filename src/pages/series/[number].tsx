@@ -2,12 +2,12 @@ import { getXcpBtcRate, satoshisToBitcoin } from 'bitcoin-conversion';
 import Decimal from 'decimal.js-light';
 import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { getPlaiceholder } from 'plaiceholder';
 import React from 'react';
 import { ApeCard } from '../../modules/shared/components/ApeCard';
 import { ApeGrid } from '../../modules/shared/components/ApeGrid';
 import { Counterparty } from '../../modules/shared/lib/Counterparty';
-import { ImagePlaciceholderProps } from '../../modules/types';
+import { getImageProps } from '../../modules/shared/lib/images';
+import { ImagePlaceholderProps } from '../../modules/types';
 import { SanityClient } from '../../sanity/client';
 import type { Ape } from '../../sanity/types';
 
@@ -82,13 +82,11 @@ export const getStaticProps: GetStaticProps<Props, { number: string }> = async (
     apes.map(async (a) => {
       const cheapestDispenser = apeNameToCheapestDispenserPrice[a.name];
       const cheapestOrder = apeNameToCheapestOrderPrice[a.name];
-      const { img, base64: blurDataURL } = a.imageUrl.endsWith('.mp4')
-        ? { img: { src: a.imageUrl }, base64: null }
-        : await getPlaiceholder(a.imageUrl);
+      const imageProps = await getImageProps(a.imageUrl);
 
       return {
         ...a,
-        imageProps: { ...img, blurDataURL },
+        imageProps,
         cheapestPrice: calculateCheapestPrice({ cheapestDispenser, cheapestOrder }),
       };
     })
@@ -112,7 +110,7 @@ type CheapestPriceParams = {
   cheapestOrder: number | undefined;
 };
 type Props = {
-  apes: (Ape & { cheapestPrice: number | null; imageProps: ImagePlaciceholderProps })[];
+  apes: (Ape & { cheapestPrice: number | null; imageProps: ImagePlaceholderProps })[];
 };
 
 export default SeriesPage;

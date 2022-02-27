@@ -7,7 +7,7 @@ import { Dispenser } from '../../modules/shared/components/Dispenser';
 import { Order } from '../../modules/shared/components/Order';
 import { VideoPlayer } from '../../modules/shared/components/VideoPlayer';
 import { Counterparty } from '../../modules/shared/lib/Counterparty';
-import { ImagePlaciceholderProps } from '../../modules/types';
+import { ImagePlaceholderProps } from '../../modules/types';
 import { SanityClient } from '../../sanity/client';
 import { Ape } from '../../sanity/types';
 
@@ -74,7 +74,7 @@ const AssetDetailScreen: NextPage<Props> = ({ ape, dispensers, orders }) => {
 type Props = {
   ape: Ape & {
     divisible: boolean;
-    imageProps: ImagePlaciceholderProps;
+    imageProps: ImagePlaceholderProps;
     supply: number;
     description: string;
   };

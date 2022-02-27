@@ -21,8 +21,10 @@ module.exports = withPlaiceholder({
   images: {
     domains: [
       'arweave.net',
+      'atlirntiuj5mbh2gj4k3xmxxncqo5bjwh7inye3ax4xwmrfxcztq.arweave.net',
       'hosting.photobucket.com',
       'media.istockphoto.com',
+      'nbeiplrqgsrkubuxayv6mo4av3cj3muqjzytpwy7gzgaputyeaua.arweave.net',
       'imgur.com',
       'i.imgur.com',
       'xchain.io',

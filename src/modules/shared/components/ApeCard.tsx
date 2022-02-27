@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
 import type { Ape } from '../../../sanity/types';
-import { ImagePlaciceholderProps } from '../../types';
+import { ImagePlaceholderProps } from '../../types';
 import { ApeImage } from './ApeImage';
 import { VideoPlayer } from './VideoPlayer';
 
@@ -67,6 +67,6 @@ export const ApeCardCaptionContainer: React.FC = ({ children }) => (
 );
 
 type Props = {
-  ape: Ape & { cheapestPrice: number | null; imageProps: ImagePlaciceholderProps };
+  ape: Ape & { cheapestPrice: number | null; imageProps: ImagePlaceholderProps };
   order: number;
 };

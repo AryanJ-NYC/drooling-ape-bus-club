@@ -2,12 +2,12 @@ import async from 'async';
 import sample from 'lodash/sample';
 import type { GetStaticProps, NextPage } from 'next';
 import Link from 'next/link';
-import { getPlaiceholder } from 'plaiceholder';
 import { ApeCardCaptionContainer, ApeCardContainer } from '../modules/shared/components/ApeCard';
 import { ApeGrid } from '../modules/shared/components/ApeGrid';
 import { ApeImage } from '../modules/shared/components/ApeImage';
 import { VideoPlayer } from '../modules/shared/components/VideoPlayer';
-import type { ImagePlaciceholderProps } from '../modules/types';
+import { getImageProps } from '../modules/shared/lib/images';
+import type { ImagePlaceholderProps } from '../modules/types';
 import { SanityClient } from '../sanity/client';
 import type { Ape } from '../sanity/types';
 
@@ -15,7 +15,6 @@ const Home: NextPage<Props> = ({ seriesToApe }) => {
   return (
     <ApeGrid>
       {Object.entries(seriesToApe).map(([seriesNumber, ape]) => {
-        console.log({ ape });
         const imageUrl = ape.imageUrl;
         return (
           <ApeCardContainer key={seriesNumber}>
@@ -46,10 +45,10 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     serieses,
     async (series: { apes: [{ imageUrl: string }] }) => {
       const ape = sample(series.apes);
-      const placeholder = ape?.imageUrl ? await getPlaiceholder(ape.imageUrl) : null;
+      const placeholder = ape?.imageUrl ? await getImageProps(ape?.imageUrl) : null;
       return {
         ...ape,
-        imageProps: { ...(placeholder?.img ?? null), blurDataURL: placeholder?.base64 ?? null },
+        imageProps: { ...placeholder },
       };
     }
   );
@@ -62,7 +61,7 @@ type Props = {
   seriesToApe: Record<
     string,
     Pick<Ape, 'imageUrl'> & {
-      imageProps: ImagePlaciceholderProps;
+      imageProps: ImagePlaceholderProps;
     }
   >;
 };
