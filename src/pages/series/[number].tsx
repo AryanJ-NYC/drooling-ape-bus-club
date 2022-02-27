@@ -1,8 +1,10 @@
 import { getXcpBtcRate, satoshisToBitcoin } from 'bitcoin-conversion';
 import Decimal from 'decimal.js-light';
+import sample from 'lodash/sample';
 import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
+import { NextSeo } from 'next-seo';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ApeCard } from '../../modules/shared/components/ApeCard';
 import { ApeGrid } from '../../modules/shared/components/ApeGrid';
 import { Counterparty } from '../../modules/shared/lib/Counterparty';
@@ -13,12 +15,22 @@ import type { Ape } from '../../sanity/types';
 
 const SeriesPage: NextPage<Props> = ({ apes }) => {
   const router = useRouter();
-  if (router.isFallback) {
-    return <p>Under Contstruction</p>;
-  }
-
+  const randomApeImage = useMemo(
+    () =>
+      sample(
+        apes
+          .filter((a) => !a.imageUrl.endsWith('.mp4') && !a.imageUrl.endsWith('.gif'))
+          .map((a) => a.imageUrl)
+      ),
+    [apes]
+  );
+  console.log({ randomApeImage });
   return (
     <ApeGrid>
+      <NextSeo
+        openGraph={{ images: [{ height: 800, url: randomApeImage!, width: 800 }] }}
+        title={`Drooling Ape Bus Club | Series ${router.query.number}`}
+      />
       {apes.map((a, i) => (
         <ApeCard ape={a} key={a.name} order={i + 1} />
       ))}
@@ -109,4 +121,12 @@ type Props = {
   apes: (Ape & { cheapestPrice: number | null; imageProps: ImagePlaceholderProps })[];
 };
 
-export default SeriesPage;
+const SeriesPageWithFallback: React.FC<Props> = (props) => {
+  const router = useRouter();
+  if (router.isFallback) {
+    return <p>Under Contstruction</p>;
+  }
+  return <SeriesPage {...props} />;
+};
+
+export default SeriesPageWithFallback;

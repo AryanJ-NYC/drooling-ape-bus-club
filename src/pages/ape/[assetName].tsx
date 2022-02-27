@@ -1,5 +1,6 @@
 import type { Dispenser as DispenserType, Order as OrderType } from 'counterparty-node-client';
 import type { GetServerSideProps, NextPage } from 'next';
+import { NextSeo } from 'next-seo';
 import Image from 'next/image';
 import { getPlaiceholder } from 'plaiceholder';
 import React from 'react';
@@ -14,9 +15,16 @@ import { Ape } from '../../sanity/types';
 const sanity = new SanityClient();
 
 const AssetDetailScreen: NextPage<Props> = ({ ape, dispensers, orders }) => {
+  const artistNames = ape.artists.map((a) => a.name).join(', ');
   const imageUrl = ape.imageUrl;
+
   return (
     <div className="flex flex-col lg:flex-row space-y-4 lg:space-x-8 lg:space-y-0">
+      <NextSeo
+        description={`${ape.name} created by ${artistNames}`}
+        openGraph={{ images: [{ height: 800, url: imageUrl, width: 800 }] }}
+        title={`${ape.name} | Drooling Ape Bus Club`}
+      />
       <div className="flex-1">
         {imageUrl.includes('.mp4') ? (
           <VideoPlayer src={imageUrl} />

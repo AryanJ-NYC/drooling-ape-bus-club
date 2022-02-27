@@ -22,11 +22,13 @@ module.exports = withPlaiceholder({
     domains: [
       'arweave.net',
       'atlirntiuj5mbh2gj4k3xmxxncqo5bjwh7inye3ax4xwmrfxcztq.arweave.net',
+      'frhost.co.uk',
       'hosting.photobucket.com',
       'media.istockphoto.com',
       'nbeiplrqgsrkubuxayv6mo4av3cj3muqjzytpwy7gzgaputyeaua.arweave.net',
       'imgur.com',
       'i.imgur.com',
+      'bafybeiehde5nbh6dmkgyjgw4kehugctxd7uzt7g53taydebksiblb6tkhm.ipfs.dweb.link',
       'xchain.io',
     ],
   },
