@@ -8,6 +8,7 @@ import { Dispenser } from '../../modules/shared/components/Dispenser';
 import { Order } from '../../modules/shared/components/Order';
 import { VideoPlayer } from '../../modules/shared/components/VideoPlayer';
 import { Counterparty } from '../../modules/shared/lib/Counterparty';
+import { getImageProps } from '../../modules/shared/lib/images';
 import { ImagePlaceholderProps } from '../../modules/types';
 import { SanityClient } from '../../sanity/client';
 import { Ape } from '../../sanity/types';
@@ -102,14 +103,14 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   ]);
   if (!ape) return { notFound: true };
 
-  const [dispensers, orders, { img, base64: blurDataURL }] = await Promise.all([
+  const [dispensers, orders, imageProps] = await Promise.all([
     counterparty.getDispensersByAssetName(params.assetName),
     counterparty.getOrdersByAssetName(params.assetName),
-    getPlaiceholder(ape.imageUrl),
+    getImageProps(ape.imageUrl),
   ]);
   return {
     props: {
-      ape: { ...ape, ...assetInfo, imageProps: { ...img, blurDataURL } },
+      ape: { ...ape, ...assetInfo, imageProps },
       dispensers,
       orders,
     },
