@@ -58,7 +58,6 @@ const AssetDetailScreen: NextPage<Props> = ({ ape, dispensers, orders }) => {
               ))}
             </p>
           )}
-          <p>{ape.supply} Issued</p>
         </div>
         <div className="flex-1">
           {!!dispensers.length && (
@@ -88,20 +87,12 @@ const AssetDetailScreen: NextPage<Props> = ({ ape, dispensers, orders }) => {
 };
 
 type Props = {
-  ape: Ape & {
-    divisible: boolean;
-    imageProps: ImagePlaceholderProps;
-    supply: number;
-    description: string;
-  };
+  ape: Ape & { imageProps: ImagePlaceholderProps };
   dispensers: DispenserType[];
   orders: OrderType[];
 };
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const apes = await sanity.getApes();
-  return { fallback: true, paths: apes.map((ape) => ({ params: { assetName: ape.name } })) };
-};
+export const getStaticPaths: GetStaticPaths = async () => ({ fallback: true, paths: [] });
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   if (typeof params?.assetName !== 'string') {
@@ -109,10 +100,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   }
 
   const counterparty = new Counterparty();
-  const [ape, [assetInfo]] = await Promise.all([
-    sanity.getApeByName(params.assetName),
-    counterparty.getAssetInfo([params.assetName]),
-  ]);
+  const ape = await sanity.getApeByName(params.assetName);
+
   if (!ape) return { notFound: true };
 
   const [dispensers, orders, imageProps] = await Promise.all([
@@ -122,10 +111,11 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   ]);
   return {
     props: {
-      ape: { ...ape, ...assetInfo, imageProps },
+      ape: { ...ape, imageProps },
       dispensers,
       orders,
     },
+    revalidate: 60 * 15,
   };
 };
 
