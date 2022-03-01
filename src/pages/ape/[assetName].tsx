@@ -2,13 +2,11 @@ import type { Dispenser as DispenserType, Order as OrderType } from 'counterpart
 import type { GetServerSideProps, NextPage } from 'next';
 import { NextSeo } from 'next-seo';
 import Image from 'next/image';
-import { getPlaiceholder } from 'plaiceholder';
 import React from 'react';
 import { Dispenser } from '../../modules/shared/components/Dispenser';
 import { Order } from '../../modules/shared/components/Order';
 import { VideoPlayer } from '../../modules/shared/components/VideoPlayer';
 import { Counterparty } from '../../modules/shared/lib/Counterparty';
-import { getImageProps } from '../../modules/shared/lib/images';
 import { ImagePlaceholderProps } from '../../modules/types';
 import { SanityClient } from '../../sanity/client';
 import { Ape } from '../../sanity/types';
@@ -30,8 +28,9 @@ const AssetDetailScreen: NextPage<Props> = ({ ape, dispensers, orders }) => {
         {imageUrl.includes('.mp4') ? (
           <VideoPlayer src={imageUrl} />
         ) : (
-          // @ts-expect-error
-          <Image alt={`${ape.name}`} {...ape.imageProps} placeholder="blur" />
+          <div className="flex justify-center">
+            <Image alt={`${ape.name}`} height={666} src={ape.imageUrl} width={666} />
+          </div>
         )}
       </div>
       <div className="flex flex-1 flex-col space-y-8">
@@ -105,14 +104,13 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   ]);
   if (!ape) return { notFound: true };
 
-  const [dispensers, orders, imageProps] = await Promise.all([
+  const [dispensers, orders] = await Promise.all([
     counterparty.getDispensersByAssetName(params.assetName),
     counterparty.getOrdersByAssetName(params.assetName),
-    getImageProps(ape.imageUrl),
   ]);
   return {
     props: {
-      ape: { ...ape, ...assetInfo, imageProps },
+      ape: { ...ape, ...assetInfo },
       dispensers,
       orders,
     },
