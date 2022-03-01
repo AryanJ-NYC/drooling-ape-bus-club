@@ -1,5 +1,5 @@
 import type { Dispenser as DispenserType, Order as OrderType } from 'counterparty-node-client';
-import type { GetServerSideProps, NextPage } from 'next';
+import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { NextSeo } from 'next-seo';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -22,43 +22,50 @@ const AssetDetailScreen: NextPage<Props> = ({ ape, dispensers, orders }) => {
   }
 
   const artistNames = ape.artists?.map((a) => a.name).join(', ');
-  const imageUrl = ape.imageUrl;
+  const { imageUrl, name } = ape;
 
   return (
-    <div className="flex flex-col lg:flex-row space-y-4 lg:space-x-8 lg:space-y-0">
+    <div className="flex flex-col max-w-7xl m-auto space-y-4">
       <NextSeo
-        description={`${ape.name} created by ${artistNames}`}
+        description={`${name} created by ${artistNames}`}
         openGraph={{ images: [{ height: 800, url: imageUrl, width: 800 }] }}
-        title={`${ape.name} | Drooling Ape Bus Club`}
+        title={`${name} | Drooling Ape Bus Club`}
       />
-      <div className="flex-1">
+      <div className="flex-1 text-center leading-5">
+        <a
+          className="text-blue-400 hover:text-blue-600"
+          href={`https://dankset.io/assets/${name}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <h1 className="text-5xl font-medium tracking-wider">{name}</h1>
+        </a>
+        {!!ape.artists?.length && (
+          <p className="text-lg">
+            by{' '}
+            {ape.artists.map((artist) => (
+              <a
+                className="px-0.5 text-blue-400 hover:text-blue-600"
+                href={artist.webpage}
+                key={artist.name}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {artist.name}
+              </a>
+            ))}
+          </p>
+        )}
+      </div>
+      <div className="flex justify-center">
         {imageUrl.includes('.mp4') ? (
           <VideoPlayer src={imageUrl} />
         ) : (
           // @ts-expect-error
-          <Image alt={`${ape.name}`} {...ape.imageProps} placeholder="blur" />
+          <Image alt={`${name}`} {...ape.imageProps} placeholder="blur" />
         )}
       </div>
       <div className="flex flex-1 flex-col space-y-8">
-        <div className="flex-1 text-center leading-5">
-          <p className="text-xl">{ape.name}</p>
-          {!!ape.artists?.length && (
-            <p>
-              by{' '}
-              {ape.artists.map((artist) => (
-                <a
-                  className="px-0.5 text-blue-400 hover:text-blue-600"
-                  href={artist.webpage}
-                  key={artist.name}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {artist.name}
-                </a>
-              ))}
-            </p>
-          )}
-        </div>
         <div className="flex-1">
           {!!dispensers.length && (
             <div>
@@ -86,15 +93,19 @@ const AssetDetailScreen: NextPage<Props> = ({ ape, dispensers, orders }) => {
   );
 };
 
+type Context = { assetName: string };
 type Props = {
   ape: Ape & { imageProps: ImagePlaceholderProps };
   dispensers: DispenserType[];
   orders: OrderType[];
 };
 
-export const getServerSideProps: GetServerSideProps<Props, { assetName: string }> = async ({
-  params,
-}) => {
+export const getStaticPaths: GetStaticPaths<Context> = async () => {
+  const apes = await sanity.getApeNames();
+  return { fallback: true, paths: apes.map((ape) => ({ params: { assetName: ape.name } })) };
+};
+
+export const getStaticProps: GetStaticProps<Props, Context> = async ({ params }) => {
   if (typeof params?.assetName !== 'string') {
     return { notFound: true };
   }
@@ -115,6 +126,7 @@ export const getServerSideProps: GetServerSideProps<Props, { assetName: string }
       dispensers,
       orders,
     },
+    revalidate: 60 * 30,
   };
 };
 

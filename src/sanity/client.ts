@@ -29,6 +29,14 @@ export class SanityClient extends Sanity {
     return ape;
   }
 
+  async getApeNames() {
+    const apesQuery = /* groq */ `*[_type == 'ape'] {
+      name
+    }`;
+    const apes: Pick<Ape, 'name'>[] = await this.fetch(apesQuery);
+    return apes;
+  }
+
   async getApes() {
     const apesQuery = /* groq */ `*[_type == 'ape'] | order(order asc) {
       ...,
