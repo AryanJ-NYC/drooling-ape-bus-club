@@ -94,7 +94,7 @@ type Props = {
 
 export const getStaticPaths: GetStaticPaths = async () => ({ fallback: true, paths: [] });
 
-export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
+export const getStaticProps: GetStaticProps<Props, { assetName: string }> = async ({ params }) => {
   if (typeof params?.assetName !== 'string') {
     return { notFound: true };
   }
