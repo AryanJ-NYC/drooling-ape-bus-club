@@ -1,5 +1,5 @@
 import type { Dispenser as DispenserType, Order as OrderType } from 'counterparty-node-client';
-import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
+import type { GetServerSideProps, NextPage } from 'next';
 import { NextSeo } from 'next-seo';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -92,9 +92,9 @@ type Props = {
   orders: OrderType[];
 };
 
-export const getStaticPaths: GetStaticPaths = async () => ({ fallback: true, paths: [] });
-
-export const getStaticProps: GetStaticProps<Props, { assetName: string }> = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps<Props, { assetName: string }> = async ({
+  params,
+}) => {
   if (typeof params?.assetName !== 'string') {
     return { notFound: true };
   }
