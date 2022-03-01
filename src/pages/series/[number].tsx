@@ -99,14 +99,14 @@ export const getStaticProps: GetStaticProps<Props, { number: string }> = async (
       return {
         ...a,
         imageProps,
-        cheapestPrice: calculateCheapestPrice({ cheapestDispenser, cheapestOrder }),
+        cheapestPrice: getCheapestPrice({ cheapestDispenser, cheapestOrder }),
       };
     })
   );
   return { props: { apes: apesWithCheapestPrice } };
 };
 
-const calculateCheapestPrice = ({ cheapestDispenser, cheapestOrder }: CheapestPriceParams) => {
+const getCheapestPrice = ({ cheapestDispenser, cheapestOrder }: CheapestPriceParams) => {
   if (cheapestDispenser && !cheapestOrder) return cheapestDispenser;
   if (!cheapestDispenser && cheapestOrder) return cheapestOrder;
   if (cheapestDispenser && cheapestOrder) return Math.min(cheapestDispenser, cheapestOrder);
