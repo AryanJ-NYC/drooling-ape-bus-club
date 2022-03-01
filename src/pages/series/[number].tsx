@@ -24,7 +24,6 @@ const SeriesPage: NextPage<Props> = ({ apes }) => {
       ),
     [apes]
   );
-  console.log({ randomApeImage });
   return (
     <ApeGrid>
       <NextSeo

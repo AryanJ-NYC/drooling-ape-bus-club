@@ -16,7 +16,7 @@ import { Ape } from '../../sanity/types';
 const sanity = new SanityClient();
 
 const AssetDetailScreen: NextPage<Props> = ({ ape, dispensers, orders }) => {
-  const artistNames = ape.artists.map((a) => a.name).join(', ');
+  const artistNames = ape.artists?.map((a) => a.name).join(', ');
   const imageUrl = ape.imageUrl;
 
   return (
@@ -37,20 +37,22 @@ const AssetDetailScreen: NextPage<Props> = ({ ape, dispensers, orders }) => {
       <div className="flex flex-1 flex-col space-y-8">
         <div className="flex-1 text-center leading-5">
           <p className="text-xl">{ape.name}</p>
-          <p>
-            by{' '}
-            {ape.artists.map((artist) => (
-              <a
-                className="px-0.5 text-blue-400 hover:text-blue-600"
-                href={artist.webpage}
-                key={artist.name}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {artist.name}
-              </a>
-            ))}
-          </p>
+          {!!ape.artists?.length && (
+            <p>
+              by{' '}
+              {ape.artists.map((artist) => (
+                <a
+                  className="px-0.5 text-blue-400 hover:text-blue-600"
+                  href={artist.webpage}
+                  key={artist.name}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {artist.name}
+                </a>
+              ))}
+            </p>
+          )}
           <p>{ape.supply} Issued</p>
         </div>
         <div className="flex-1">
