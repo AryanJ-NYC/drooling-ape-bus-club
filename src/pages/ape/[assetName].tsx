@@ -115,7 +115,6 @@ export const getServerSideProps: GetServerSideProps<Props, { assetName: string }
       dispensers,
       orders,
     },
-    revalidate: 60 * 15,
   };
 };
 
