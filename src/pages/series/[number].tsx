@@ -52,9 +52,10 @@ export const getStaticProps: GetStaticProps<Props, { number: string }> = async (
 
   const cp = new Counterparty();
   const apeNames = apes.map((a) => a.name);
-  const [dispensers, orders] = await Promise.all([
+  const [dispensers, orders, xcpRate] = await Promise.all([
     cp.getDispensersByAssetNames(apeNames),
     cp.getordersByAssetNames(apeNames),
+    getXcpBtcRate(),
   ]);
 
   const apeNameToCheapestDispenserPrice = dispensers.reduce((prev, dispenser) => {
@@ -69,7 +70,6 @@ export const getStaticProps: GetStaticProps<Props, { number: string }> = async (
     };
   }, {} as Record<string, number | undefined>);
 
-  const xcpRate = await getXcpBtcRate();
   const apeNameToCheapestOrderPrice = orders
     .filter((o) => o.get_asset === 'XCP')
     .reduce((prev, order) => {
