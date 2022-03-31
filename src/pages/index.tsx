@@ -21,9 +21,7 @@ const Home: NextPage<Props> = ({ seriesToApe }) => {
             <Link href={`/series/${seriesNumber}`}>
               <a className="flex flex-col">
                 {imageUrl.includes('.mp4') ? (
-                  <div>
-                    <VideoPlayer src={imageUrl} />
-                  </div>
+                  <VideoPlayer src={imageUrl} />
                 ) : (
                   // @ts-expect-error
                   <ApeImage alt={`${seriesNumber} series asset`} {...ape.imageProps} />

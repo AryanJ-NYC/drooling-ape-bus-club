@@ -56,8 +56,10 @@ export const ApeCard: React.FC<Props> = ({ ape, order }) => {
             {data.cheapestPrice.toLocaleString(undefined, { maximumFractionDigits: 8 })} BTC
           </p>
         ) : !data && isValidating ? (
-          <Skeleton />
-        ) : null}
+          <p className="text-sm">Apes Fetching Data...</p>
+        ) : (
+          <p className="text-sm">No Dispensers/Order Found</p>
+        )}
       </ApeCardCaptionContainer>
     </ApeCardContainer>
   );
