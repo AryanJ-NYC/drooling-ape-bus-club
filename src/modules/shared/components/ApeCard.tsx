@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
 import Skeleton from 'react-loading-skeleton';
-import useSWR from 'swr';
+import useSWRImmutable from 'swr/immutable';
 import type { Ape } from '../../../sanity/types';
 import { ImagePlaceholderProps } from '../../types';
 import { ApeImage } from './ApeImage';
@@ -10,7 +10,7 @@ import { VideoPlayer } from './VideoPlayer';
 export const ApeCard: React.FC<Props> = ({ ape, order }) => {
   const imageUrl = ape.imageUrl;
   const url = `/ape/${ape.name}`;
-  const { data, isValidating } = useSWR([ape.name, 'cheapestPrice'], async (apeName) => {
+  const { data, isValidating } = useSWRImmutable([ape.name, 'cheapestPrice'], async (apeName) => {
     const response = await fetch(`/api/apes/${apeName}/cheapest`);
     return response.json();
   });
@@ -55,7 +55,7 @@ export const ApeCard: React.FC<Props> = ({ ape, order }) => {
           <p className="text-sm">
             {data.cheapestPrice.toLocaleString(undefined, { maximumFractionDigits: 8 })} BTC
           </p>
-        ) : isValidating ? (
+        ) : !data && isValidating ? (
           <Skeleton />
         ) : null}
       </ApeCardCaptionContainer>
