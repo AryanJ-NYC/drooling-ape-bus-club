@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import React from 'react';
-import Skeleton from 'react-loading-skeleton';
 import useSWRImmutable from 'swr/immutable';
 import type { Ape } from '../../../sanity/types';
 import { ImagePlaceholderProps } from '../../types';

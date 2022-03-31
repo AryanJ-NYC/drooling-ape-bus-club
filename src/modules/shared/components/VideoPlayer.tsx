@@ -5,8 +5,14 @@ import '../../../../node_modules/video-react/dist/video-react.css';
 
 export const VideoPlayer: React.FC<{ src: string }> = ({ src }) => {
   return (
-    <div>
+    <>
       <Player fluid playsInline src={src} />
-    </div>
+      <style global jsx>{`
+        .video-react-fluid,
+        video {
+          height: 100% !important;
+        }
+      `}</style>
+    </>
   );
 };

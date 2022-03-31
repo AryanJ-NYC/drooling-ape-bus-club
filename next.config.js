@@ -14,6 +14,11 @@ envVariablesValidationSchema.validateSync({
 });
 
 module.exports = withPlaiceholder({
+  experimental: {
+    images: {
+      layoutRaw: true,
+    },
+  },
   i18n: {
     locales: ['en'],
     defaultLocale: 'en',
