@@ -64,15 +64,11 @@ export const ApeCard: React.FC<Props> = ({ ape, order }) => {
 };
 
 export const ApeCardContainer: React.FC = ({ children }) => (
-  <div className="flex flex-col items-center">
-    <div className="flex flex-col h-full shadow-xl w-full">{children}</div>
-  </div>
+  <div className="flex flex-col h-full shadow-xl w-full">{children}</div>
 );
 
 export const ApeCardCaptionContainer: React.FC = ({ children }) => (
-  <div className="bg-pink-50 py-2 rounded-b-md flex flex-col grow items-center space-y-0.5">
-    {children}
-  </div>
+  <div className="bg-pink-50 py-2 flex flex-col flex-grow items-center space-y-0.5">{children}</div>
 );
 
 type Props = {
