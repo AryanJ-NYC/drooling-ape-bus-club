@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
+import Skeleton from 'react-loading-skeleton';
+import useSWR from 'swr';
 import type { Ape } from '../../../sanity/types';
 import { ImagePlaceholderProps } from '../../types';
 import { ApeImage } from './ApeImage';
@@ -8,6 +10,11 @@ import { VideoPlayer } from './VideoPlayer';
 export const ApeCard: React.FC<Props> = ({ ape, order }) => {
   const imageUrl = ape.imageUrl;
   const url = `/ape/${ape.name}`;
+  const { data, isValidating } = useSWR([ape.name, 'cheapestPrice'], async (apeName) => {
+    const response = await fetch(`/api/apes/${apeName}/cheapest`);
+    return response.json();
+  });
+
   return (
     <ApeCardContainer>
       {imageUrl.includes('.mp4') ? (
@@ -44,10 +51,12 @@ export const ApeCard: React.FC<Props> = ({ ape, order }) => {
             ))}
           </p>
         ) : null}
-        {ape.cheapestPrice ? (
+        {data?.cheapestPrice ? (
           <p className="text-sm">
-            {ape.cheapestPrice.toLocaleString(undefined, { maximumFractionDigits: 8 })} BTC
+            {data.cheapestPrice.toLocaleString(undefined, { maximumFractionDigits: 8 })} BTC
           </p>
+        ) : isValidating ? (
+          <Skeleton />
         ) : null}
       </ApeCardCaptionContainer>
     </ApeCardContainer>
@@ -67,6 +76,6 @@ export const ApeCardCaptionContainer: React.FC = ({ children }) => (
 );
 
 type Props = {
-  ape: Ape & { cheapestPrice: number | null; imageProps: ImagePlaceholderProps };
+  ape: Ape & { imageProps: ImagePlaceholderProps };
   order: number;
 };
