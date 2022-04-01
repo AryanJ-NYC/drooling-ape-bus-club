@@ -12,9 +12,9 @@ import squareLogo from '../../../../../public/logo_square.png';
 
 export const Header = () => {
   return (
-    <header className="bg-pink-50 py-3 flex items-center justify-between px-16">
+    <header className="bg-pink-50 p-4 flex items-center justify-between md:px-16">
       <Link href="/">
-        <a className="flex items-end space-x-4">
+        <a>
           <div className="block lg:hidden">
             <Image alt="Drooling Ape Bus Club logo" height="80" width="80" src={squareLogo} />
           </div>
@@ -25,7 +25,9 @@ export const Header = () => {
       </Link>
       <SeriesDropdown />
       <Link href="/submit">
-        <a className="text-lg">Submit an Ape</a>
+        <a className="text-lg px-4 md:px-6 py-2 bg-lime-500 hover:bg-lime-600 rounded-md text-lime-50">
+          Submit Ape
+        </a>
       </Link>
     </header>
   );

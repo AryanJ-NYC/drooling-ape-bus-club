@@ -10,20 +10,20 @@ export const PageLayout: React.FC = ({ children }) => {
         <main className="flex-1 bg-gray-50 px-8 md:px-16 py-8">{children}</main>
         <footer className="bg-purple-50 px-8 md:px-24 py-4 flex justify-center space-x-6">
           <a
-            className="text-purple-400 hover:text-purple-500 cursor-pointer"
+            className="text-lime-500 hover:text-lime-600 cursor-pointer"
             href="https://twitter.com/DroolingApes"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <FaTwitter className="h-5 w-5" />
+            <FaTwitter className="h-8 w-8" />
           </a>
           <a
-            className="text-purple-400 hover:text-purple-500 cursor-pointer"
+            className="text-lime-500 hover:text-lime-600 cursor-pointer"
             href="https://t.me/drooling_ape_bus_club"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <FaTelegramPlane className="h-5 w-5" />
+            <FaTelegramPlane className="h-8 w-8" />
           </a>
         </footer>
       </div>

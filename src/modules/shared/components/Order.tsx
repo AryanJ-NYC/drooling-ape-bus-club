@@ -19,7 +19,9 @@ export const Order: React.FC<Props> = ({ order }) => {
     <a href={`https://xchain.io/tx/${order.tx_hash}`} target="_blank" rel="noreferrer">
       <div className="rounded-md shadow-lg bg-gray-50 p-4">
         <p>
-          You Give: {satoshisToBitcoin(order.get_quantity)} {order.get_asset}
+          You Give:{' '}
+          {order.get_asset === 'XCP' ? satoshisToBitcoin(order.get_quantity) : order.get_quantity}{' '}
+          {order.get_asset}
           {priceInBtc ? ` (~${priceInBtc} BTC each)` : null}
         </p>
         <p>

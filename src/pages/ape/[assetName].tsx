@@ -25,7 +25,7 @@ const AssetDetailScreen: NextPage<Props> = ({ ape, dispensers, orders }) => {
   const { imageUrl, name } = ape;
 
   return (
-    <div className="flex flex-col max-w-7xl m-auto space-y-4">
+    <div className="flex flex-col items-center max-w-7xl m-auto space-y-4">
       <NextSeo
         description={`${name} created by ${artistNames}`}
         openGraph={{ images: [{ height: 800, url: imageUrl, width: 800 }] }}
@@ -38,7 +38,9 @@ const AssetDetailScreen: NextPage<Props> = ({ ape, dispensers, orders }) => {
           target="_blank"
           rel="noreferrer"
         >
-          <h1 className="text-5xl font-medium tracking-wider">{name}</h1>
+          <h1 className="text-3xl md:text-5xl overflow-x-hidden overflow-ellipsis font-medium tracking-wider">
+            {name}
+          </h1>
         </a>
         {!!ape.artists?.length && (
           <p className="text-lg">
@@ -57,36 +59,38 @@ const AssetDetailScreen: NextPage<Props> = ({ ape, dispensers, orders }) => {
           </p>
         )}
       </div>
-      <div className="flex justify-center">
-        {imageUrl.includes('.mp4') ? (
-          <VideoPlayer src={imageUrl} />
-        ) : (
-          // @ts-expect-error
-          <Image alt={`${name}`} {...ape.imageProps} placeholder="blur" />
-        )}
-      </div>
-      <div className="flex flex-1 flex-col space-y-8">
-        <div className="flex-1">
-          {!!dispensers.length && (
-            <div>
-              <p className="text-lg">Dispensers</p>
-              <div className="space-y-4">
-                {dispensers.map((d) => (
-                  <Dispenser dispenser={d} key={d.tx_hash} />
-                ))}
-              </div>
-            </div>
+      <div className="flex flex-col xl:flex-row xl:justify-between gap-y-6 gap-x-24">
+        <div className="flex justify-center max-w-2xl">
+          {imageUrl.includes('.mp4') ? (
+            <VideoPlayer src={imageUrl} />
+          ) : (
+            // @ts-expect-error
+            <Image alt={`${name}`} {...ape.imageProps} placeholder="blur" />
           )}
-          {!!orders.length && (
-            <div>
-              <p className="text-lg">Open Orders</p>
-              <div className="space-y-4">
-                {orders.map((o) => (
-                  <Order order={o} key={o.tx_hash} />
-                ))}
+        </div>
+        <div className="flex flex-1 flex-col gap-y-8">
+          <div className="flex flex-col gap-y-6">
+            {!!dispensers.length && (
+              <div>
+                <p className="text-lg font-medium">Dispensers</p>
+                <div className="space-y-4">
+                  {dispensers.map((d) => (
+                    <Dispenser dispenser={d} key={d.tx_hash} />
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+            {!!orders.length && (
+              <div>
+                <p className="text-lg font-medium">Open Orders</p>
+                <div className="space-y-4">
+                  {orders.map((o) => (
+                    <Order order={o} key={o.tx_hash} />
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
