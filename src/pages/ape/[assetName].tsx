@@ -38,7 +38,7 @@ const AssetDetailScreen: NextPage<Props> = ({ ape, dispensers, orders }) => {
           target="_blank"
           rel="noreferrer"
         >
-          <h1 className="text-3xl md:text-5xl overflow-x-hidden overflow-ellipsis font-medium tracking-wider">
+          <h1 className="text-3xl md:text-5xl overflow-x-hidden overflow-ellipsis overflow-y-hidden font-medium tracking-wider">
             {name}
           </h1>
         </a>
