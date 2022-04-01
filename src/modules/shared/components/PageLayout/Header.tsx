@@ -25,7 +25,7 @@ export const Header = () => {
       </Link>
       <SeriesDropdown />
       <Link href="/submit">
-        <a className="text-lg px-4 md:px-6 py-2 bg-lime-500 hover:bg-lime-600 rounded-md text-lime-50">
+        <a className="text-lg px-4 md:px-6 py-2 bg-lime-500 hover:bg-lime-600 rounded-md text-lime-50 shadow-green-600 hover:shadow-green-700 shadow-md">
           Submit Ape
         </a>
       </Link>
