@@ -59,14 +59,14 @@ const AssetDetailScreen: NextPage<Props> = ({ ape, dispensers, orders }) => {
           </p>
         )}
       </div>
-      <div className="flex flex-col lg:flex-row lg:justify-between gap-6 xl:gap-x-24">
-        <div className="flex justify-center max-w-2xl">
+      <div className="flex flex-col lg:flex-row lg:justify-between gap-6 xl:gap-x-24 w-2/3">
+        <div className="flex justify-center max-w-2xl min-w-full">
           {imageUrl.includes('.mp4') ? (
             <VideoPlayer src={imageUrl} />
           ) : (
             <div>
               {/* @ts-expect-error */}
-              <Image alt={`${name}`} {...ape.imageProps} placeholder="blur" />
+              <Image alt={name} {...ape.imageProps} placeholder="blur" />
             </div>
           )}
         </div>
