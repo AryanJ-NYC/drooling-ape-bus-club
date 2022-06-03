@@ -1,6 +1,6 @@
 import { getXcpBtcRate, satoshisToBitcoin } from 'bitcoin-conversion';
 import Decimal from 'decimal.js-light';
-import { NextApiHandler } from 'next';
+import type { NextApiHandler } from 'next';
 import { Counterparty } from '../../../../modules/shared/lib/Counterparty';
 
 const cp = new Counterparty();
