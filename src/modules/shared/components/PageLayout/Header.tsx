@@ -33,7 +33,7 @@ export const Header = () => {
   );
 };
 
-const series = [1, 2, 3, 4, 5];
+const series = [1, 2, 3, 4, 5, 6];
 const SeriesDropdown: React.FC = () => {
   const router = useRouter();
   const selectedSeries = router.query.number ?? null;
